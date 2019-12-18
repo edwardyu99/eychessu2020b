@@ -1,0 +1,22 @@
+1r1akab2/4n4/2c1b1n2/7R1/C1p1p3p/6P2/P1P1P3P/2N1B1C2/4A4/2BAK4 b - - 0 7
+
+
+position fen 3akab2/4n4/c3b1n2/C6R1/2p1p3p/6P2/P1P1P3P/1rN1B1C2/9/2BAKA3 w - - 0 22 moves f0e1 a7c7 a6a9 b2b9 a9a5 b9b5 a5a9 b5b9 a9a5 b9b5 a5a9 b5b9 a9a5
+go time 32376 increment 0 opptime 22614 oppincrement 0 limittime 60000 steptime 0 byotime 0
+
+
+
+position fen 3akab2/4n4/c3b1n2/C6R1/2p1p3p/6P2/P1P1P3P/1rN1B1C2/9/2BAKA3 w - - 0 22 moves f0e1 a7c7 a6a9 b2b9 a9a5 b9b5 a5a9 b5b9 a9a5 b9b5 a5a9 b5b9 a9a5 b9b5 a5a9
+banmoves b5b9
+go time 32251 increment 0 opptime 21724 oppincrement 0 limittime 60000 steptime 0 byotime 0
+Info MaxTime:1075
+info depth 1 score 1947 time 0 nodes 7 nps 7000 pv b5b9
+info depth 2 score 1947 time 0 nodes 15 nps 15000 pv b5b9
+info depth 3 score 1947 time 0 nodes 68 nps 68000 pv b5b9
+info depth 4 score 1947 time 0 nodes 122 nps 122000 pv b5b9
+info depth 5 score 1947 time 0 nodes 308 nps 308000 pv b5b9
+info depth 6 score 1947 time 4 nodes 4572 nps 1143000 pv b5b9
+bestmove b5b9
+红方胜利！比赛结束。
+双方构成循环(0212)：黑方长捉，红方1将1闲。
+根据《亚洲棋规》，黑方不变作负。

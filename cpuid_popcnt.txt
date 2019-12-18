@@ -1,0 +1,61 @@
+// cpuid.cpp 
+// processor: x86, x64
+// Use the __cpuid intrinsic to get information about a CPU
+
+#include <stdio.h>
+#include <string.h>
+#include <intrin.h>
+
+int main(int argc, char* argv[])
+{
+int CPUInfo[4] = {-1};
+unsigned    nIds, nExIds, i;
+bool    bPOPCNT = false;
+
+// __cpuid with an InfoType argument of 0 returns the number of
+    // valid Ids in CPUInfo[0] and the CPU identification string in
+    // the other three array elements. The CPU identification string is
+    // not in linear order. The code below arranges the information 
+    // in a human readable form.
+    __cpuid(CPUInfo, 0);
+    nIds = CPUInfo[0];
+
+// Get the information associated with each valid Id
+    for (i=0; i<=nIds; ++i)
+    {
+        __cpuid(CPUInfo, i);
+// Interpret CPU feature information.
+        if  (i == 1)
+        {
+            bPOPCNT= (CPUInfo[2] & 0x800000) || false;
+        }
+    }
+
+//-----------------------------
+//To determine hardware support for the popcnt instruction, call the __cpuid intrinsic
+// with InfoType=0x00000001 and check bit 23 of CPUInfo[2] (ECX).
+// This bit is 1 if the instruction is supported, and 0 otherwise.
+__cpuid(CPUInfo, 1);
+bPOPCNT = (CPUInfo[2] & 0x800000); 
+   
+
+unsigned short us[3] = {0, 0xFF, 0xFFFF};
+  unsigned short usr;
+  unsigned int   ui[4] = {0, 0xFF, 0xFFFF, 0xFFFFFFFF};
+  unsigned int   uir;
+
+  for (int i=0; i<3; i++) {
+    usr = __popcnt16(us[i]);
+    cout << "__popcnt16(0x" << hex << us[i] << ") = " << dec << usr << endl;
+  }
+
+  for (int i=0; i<4; i++) {
+    uir = __popcnt(ui[i]);
+    cout << "__popcnt(0x" << hex << ui[i] << ") = " << dec << uir << endl;
+  }
+
+
+
+
+
+}

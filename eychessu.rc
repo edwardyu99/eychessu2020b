@@ -1,0 +1,5 @@
+// eychessu.rc
+//#include <afxres.h>
+1                       ICON    DISCARDABLE     "eychessu.ico"
+//IDI_MYICON             ICON    DISCARDABLE     "eychessu.ico"
+

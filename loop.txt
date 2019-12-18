@@ -1,0 +1,5 @@
+position fen 2baka3/1r6r/2n1b1n1c/p1C1p1p1N/2p6/6P2/P1P1P3P/2N1c2C1/5R3/1R1AKAB2 b - - 0 11
+go time 48877 increment 0 opptime 35816 oppincrement 0 limittime 60000 steptime 0 byotime 0
+
+position fen 3ak4/1r2a4/2R1C3n/p3p1p1N/2p6/4c1P2/P1P4rP/4B4/4A4/3RKABC1 b - - 0 25
+go time 36331 increment 0 opptime 26238 oppincrement 0 limittime 60000 steptime 0 byotime 0

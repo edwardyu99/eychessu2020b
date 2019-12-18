@@ -1,0 +1,5 @@
+ucci
+setoption batch true
+position fen 2n6/2Cka4/3ab4/2p5p/2b6/C4r3/PR6P/B4A3/5K3/3A4c w
+go time 129794 increment 3000 opptime 227362 oppincrement 3000
+quit

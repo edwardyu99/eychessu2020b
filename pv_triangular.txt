@@ -1,0 +1,58 @@
+In Fairy-Max I don't even use a tri-diagonal array. Just a stack of moves in a 1d array. Each new node puts its PV on top 
+of the stack. It de-allocates the space when returning (by setting the stack pointer back to the start of its own PV), but 
+the data stays there, accessible for the parent, to copy it back to to its own PV.
+//MOVE pv[], pvEnd;
+MOVE pv[100000]; //pv[MAXPLY*MAXPLY];
+MOVE *endPV = pv;
+
+...
+
+Search()
+{
+  int myPV = pvEnd;
+  *pvEnd++ = 0; // initialize empty PV by writing sentinel
+
+  ...
+
+    if(score > alpha) { // alpha-beta stuff
+      ...
+      if(score >= beta) goto cutoff;
+      // We have new PV move; backup PV
+     MOVE *p = pvEnd; // points to 'returned' PV that is in de-allocated space above stack top
+     pvEnd = myPV+1;  // leave room to prepend own move
+     while(*pvEnd++ = *p++); // leaves pvEnd directly after new own PV
+     *myPV = move;    // prefix with current move
+    }
+
+  ...
+
+  pvEnd = myPV; // deallocate own PV
+  return bestScore;
+}
+---------------------------------
+typedef int Move;
+
+Move pv[MAXPLY*MAXPLY];
+int pvPtr; //=0
+
+int
+Search ()
+{
+  int myPV = pvPtr;
+  pv[pvPtr++] = INVALID; // initialize empty PV
+
+  for(ALL_MOVES)
+  {
+    ...
+
+    if(score > alpha) {
+      if(score >= beta) break; // cutoff
+      int p = pvPtr; // PV of daughter was left here
+      pvPtr = myPV; // pop previous PV
+      pv[pvPtr++] = move; // new PV move
+      while((pv[pvPtr++] = pv[p++]) != INVALID) ; // append PV of daughter to it
+    }
+  }
+
+  pvPtr = myPV; // pop PV (but leave it above stack top)
+}

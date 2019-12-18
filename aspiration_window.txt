@@ -1,0 +1,21 @@
+Code:
+
+delta = Value(16);
+alpha = RootMoves[PVIdx].prevScore - delta;
+beta  = RootMoves[PVIdx].prevScore + delta;
+
+
+That is increased after a fail low/high with the following formula:
+
+Code:
+
+if (bestValue >= beta)
+{
+    beta += delta;
+    delta += delta / 2;
+}
+else if (bestValue <= alpha)
+{   
+    alpha -= delta;
+    delta += delta / 2;
+}

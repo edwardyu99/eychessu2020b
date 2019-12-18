@@ -1,0 +1,111 @@
+2-Do you collect the PV of the Qsearch ?
+2 - No. The pv is already long enough that nobody looks at it till the end.
+
+hgm wrote:
+You do not collect the PV in the usual way in the root at the time a new PV move is found. Instead you do it at the end of 
+the iteration, where you combine the best move with the PV left on the PV stack, which must have been put there by the 
+latest PV daughter.
+
+But it is not guaranteed that this PV daughter will also be the one responsible for the best move. In the face of search 
+instability a NonPV pilot search can fail high, trigger a PV re-search, which then fails low after all. But it would produce
+ a PV, overwriting the PV of the earlier best-move daughter.
+
+A PV node that fails high can return an empty PV, if alpha was not increased before the cutoff occurs.
+Thank you , one last thing why does SF update PV in fail high
+CODE: SELECT ALL
+
+if (value > alpha)
+				{
+					if (PvNode) // Update pv even in fail-high case
+						update_pv(ss->pv, move, (ss + 1)->pv);
+
+					if (PvNode && value < beta) // Update alpha here!
+					{
+						alpha = value;
+						bestMove = move;
+					}
+					else // Fail high
+					{
+						tte->save(posKey, value_to_tt(value, ss->ply), BOUND_LOWER,
+							ttDepth, move, ss->staticEval, TT.generation());
+
+						return value;
+					}
+				}
+
+It seems pointless, as a fail high would mean the move in the parent node fails low, and would (even in Stockfish) not do 
+anything with the PV of its daughter. So you would just be updating a PV that is going to be discarded.
+
+Perhaps it is for the benefit of the root, so that it can print a one-move PV on a fail high against the aspiration window.
+Stockfish used to print inconsistent PVs for fail highs and lows in the root; I don't know if this is still the case. 
+Logically a fail high in the root should produce a one-move PV, a fail low no PV at all.
+-------------------------------------------------------------------------------------------------------
+Collecting PV with C++11
+a very clean way to collect PV with C++11 is by using std::vector. It will accept any lenght PV lines.
+
+1:  #include <list>  //<vector>  
+2:  #include <algorithm>  // std::copy  
+3:  #include <iterator>   // std::back_inserter  
+4:    
+5:  void think(){  
+6:    
+7:   std::vector<Move> newPV;  
+8:    
+9:    
+10:   //.........  
+11:   // inside iterative deepening framework  
+12:     
+13:   newPV.clear();  
+14:   // search and collect newPV  
+15:   res=alphaBeta(0,position,depth,alpha,beta,newPV);  
+16:     
+17:   // display PV  
+18:   for (auto & m :newPV){  
+19:    std::cout<<position.displayUci(m)<<" ";  
+20:   }  
+21:    
+22:    
+23:   //......  
+24:  }  
+25:    
+26:  Score alphaBeta(unsigned int ply,Position & pos,int depth,Score alpha,Score beta,std::vector<Move>& PV){  
+27:   //.....  
+28:   generate_legal_moves();  
+29:   for(each legal move){  
+30:    //std::vector<Move> childPV;  
+       std::list<Move> childPV;  
+31:    doMove(m)  
+32:    val=-alphaBeta(ply+1,pos,depth-ONE_PLY,-beta,-alpha,childPV);  
+33:    undoMove(m);  
+34:    
+35:    if(val>alpha && val <beta){  
+36:     bestMove=m;  
+37:     alpha =val;  
+38:    
+39:     PV.clear();  
+40:     PV.push_back(bestMove);  
+41:     //std::copy(childPV.begin(),childPV.end(),back_inserter(PV));  
+        //Would be better to write as below Since that would allocate the required memory in one go.
+        PV.insert(PV.end(), childPV.begin(),childPV.end());  
+42:    }  
+43:   }  
+44:  }  
+
+From line 39 to 41 you can see how each time you find a new best move in the alpha beta search you save the move as BESTMOVE
+ and fill the PV of the node with the best move followed by the child node PV.
+
+From line 13 to 19 you can see how inside the iterative deepening framework you can retrieve the new PV and display it in 
+a very easy and clean way.
+I really like C++.
+
+
+
+if(bestScore > alpha)
+{
+	bestMove = m;
+	alpha = bestScore;
+	pvLine.clear();
+	pvLine.push_back(bestMove);
+	pvLine.splice(pvLine.end(),childPV);
+pvLine is a std::list, I set the bestmove as first element and attach childPV by "splice" ( change of a pointer ).
+It avoid data copying. Each pvline change is just:set a new bestmove and "link" the already calculated child.

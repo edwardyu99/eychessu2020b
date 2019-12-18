@@ -1,0 +1,7 @@
+if(move_no <= 25) moves_left = 40 - move_no; 
+else moves_left = 15; 
+search_time = p_time / moves_left + inc; 
+
+if(move_no <= 20) moves_left = 45 - move_no; 
+else moves_left = 25;
+search_time = p_time / moves_left + inc; 

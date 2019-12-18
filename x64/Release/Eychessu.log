@@ -1,0 +1,102 @@
+﻿  Board.cpp
+  bookmain.cpp
+  Engine.cpp
+  Eychessu.cpp
+D:\edward\eychessu2019x64\Eychessu.cpp(1,1): warning C4819: 檔案含有無法在目前字碼頁 (936) 中表示的字元。請以 Unicode 格式儲存檔案以防止資料遺失
+D:\edward\eychessu2019x64\engine.h(253,56): warning C4334: '<<': 32 位元位移的結果已隱含轉換為 64 位元 (是否原來就是要進行 64 位元位移? (正在編譯原始程式檔 Engine.cpp)
+D:\edward\eychessu2019x64\engine.h(265,8): warning C4311: '類型轉換': 指標值由 'HashStruct *' 指派至 'unsigned long' 時會遭截斷 (正在編譯原始程式檔 Engine.cpp)
+D:\edward\eychessu2019x64\engine.h(265,8): warning C4302: '類型轉換': 從 'HashStruct *' 轉換為 'unsigned long'，是由較大的類型轉換為較小的類型，可能導致資料遺失 (正在編譯原始程式檔 Engine.cpp)
+D:\edward\eychessu2019x64\engine.h(272,126): warning C4311: '類型轉換': 指標值由 'HashStruct *' 指派至 'unsigned long' 時會遭截斷 (正在編譯原始程式檔 Engine.cpp)
+D:\edward\eychessu2019x64\engine.h(272,126): warning C4302: '類型轉換': 從 'HashStruct *' 轉換為 'unsigned long'，是由較大的類型轉換為較小的類型，可能導致資料遺失 (正在編譯原始程式檔 Engine.cpp)
+D:\edward\eychessu2019x64\engine.h(272,16): warning C4477: 'printf' : 格式字串 '%d' 需要 'int' 類型的引數，但 variadic 引數 1 的類型為 'HashStruct *' (正在編譯原始程式檔 Engine.cpp)
+D:\edward\eychessu2019x64\engine.h(272,16): warning C4313: 'printf': 格式字串中的 '%d' 與類型 'HashStruct *' 的引數 1 衝突 (正在編譯原始程式檔 Engine.cpp)
+D:\edward\eychessu2019x64\engine.h(287,8): warning C4311: '類型轉換': 指標值由 'EvalHash *' 指派至 'unsigned long' 時會遭截斷 (正在編譯原始程式檔 Engine.cpp)
+D:\edward\eychessu2019x64\engine.h(287,8): warning C4302: '類型轉換': 從 'EvalHash *' 轉換為 'unsigned long'，是由較大的類型轉換為較小的類型，可能導致資料遺失 (正在編譯原始程式檔 Engine.cpp)
+D:\edward\eychessu2019x64\engine.h(294,138): warning C4311: '類型轉換': 指標值由 'EvalHash *' 指派至 'unsigned long' 時會遭截斷 (正在編譯原始程式檔 Engine.cpp)
+D:\edward\eychessu2019x64\engine.h(294,138): warning C4302: '類型轉換': 從 'EvalHash *' 轉換為 'unsigned long'，是由較大的類型轉換為較小的類型，可能導致資料遺失 (正在編譯原始程式檔 Engine.cpp)
+D:\edward\eychessu2019x64\engine.h(294,16): warning C4477: 'printf' : 格式字串 '%d' 需要 'int' 類型的引數，但 variadic 引數 1 的類型為 'EvalHash *' (正在編譯原始程式檔 Engine.cpp)
+D:\edward\eychessu2019x64\engine.h(294,16): warning C4313: 'printf': 格式字串中的 '%d' 與類型 'EvalHash *' 的引數 1 衝突 (正在編譯原始程式檔 Engine.cpp)
+D:\edward\eychessu2019x64\Engine.cpp(740,1): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\stdio.h(1774): message : 請參閱 'sprintf' 的宣告
+D:\edward\eychessu2019x64\Engine.cpp(6523,25): warning C4018: '<': signed/unsigned 不相符
+D:\edward\eychessu2019x64\Engine.cpp(7037,71): warning C4018: '>=': signed/unsigned 不相符
+D:\edward\eychessu2019x64\Engine.cpp(7059,39): warning C4018: '>=': signed/unsigned 不相符
+D:\edward\eychessu2019x64\Engine.cpp(7208,20): warning C4267: '=': 將 'size_t' 轉換為 'int'，資料可能遺失
+D:\edward\eychessu2019x64\Engine.cpp(5039,27): warning C4018: '>=': signed/unsigned 不相符
+D:\edward\eychessu2019x64\Engine.cpp(3515): message : 請參考正在進行編譯的函式 樣板 具現化 'int Engine::search<1>(Board &,int,int,int,int,move_t [])'
+  pipe.cpp
+  pregen.cpp
+D:\edward\eychessu2019x64\bookmain.cpp(194,36): warning C4267: '=': 將 'size_t' 轉換為 'int'，資料可能遺失
+D:\edward\eychessu2019x64\bookmain.cpp(221,11): warning C4477: 'printf' : 格式字串 '%d' 需要 'int' 類型的引數，但 variadic 引數 2 的類型為 'unsigned __int64'
+D:\edward\eychessu2019x64\bookmain.cpp(221,11): message : 請考慮在格式字串中使用 '%zd'
+D:\edward\eychessu2019x64\base2.h(51,5): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. (正在編譯原始程式檔 Eychessu.cpp)
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(133): message : 請參閱 'strcpy' 的宣告 (正在編譯原始程式檔 Eychessu.cpp)
+D:\edward\eychessu2019x64\base2.h(56,7): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. (正在編譯原始程式檔 Eychessu.cpp)
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(133): message : 請參閱 'strcpy' 的宣告 (正在編譯原始程式檔 Eychessu.cpp)
+D:\edward\eychessu2019x64\base2.h(58,7): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. (正在編譯原始程式檔 Eychessu.cpp)
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(133): message : 請參閱 'strcpy' 的宣告 (正在編譯原始程式檔 Eychessu.cpp)
+  rkiss.cpp
+  srchboob.cpp
+  Tokenizer.cpp
+D:\edward\eychessu2019x64\srchboob.cpp(98,9): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(90): message : 請參閱 'strcat' 的宣告
+D:\edward\eychessu2019x64\srchboob.cpp(104,5): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(90): message : 請參閱 'strcat' 的宣告
+D:\edward\eychessu2019x64\srchboob.cpp(91,1): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\stdio.h(1774): message : 請參閱 'sprintf' 的宣告
+D:\edward\eychessu2019x64\srchboob.cpp(96,1): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\stdio.h(1774): message : 請參閱 'sprintf' 的宣告
+D:\edward\eychessu2019x64\srchboob.cpp(102,1): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\stdio.h(1774): message : 請參閱 'sprintf' 的宣告
+D:\edward\eychessu2019x64\Engine.h(253,56): warning C4334: '<<': 32 位元位移的結果已隱含轉換為 64 位元 (是否原來就是要進行 64 位元位移? (正在編譯原始程式檔 Eychessu.cpp)
+D:\edward\eychessu2019x64\Engine.h(265,8): warning C4311: '類型轉換': 指標值由 'HashStruct *' 指派至 'unsigned long' 時會遭截斷 (正在編譯原始程式檔 Eychessu.cpp)
+D:\edward\eychessu2019x64\Engine.h(265,8): warning C4302: '類型轉換': 從 'HashStruct *' 轉換為 'unsigned long'，是由較大的類型轉換為較小的類型，可能導致資料遺失 (正在編譯原始程式檔 Eychessu.cpp)
+D:\edward\eychessu2019x64\Engine.h(272,126): warning C4311: '類型轉換': 指標值由 'HashStruct *' 指派至 'unsigned long' 時會遭截斷 (正在編譯原始程式檔 Eychessu.cpp)
+D:\edward\eychessu2019x64\Engine.h(272,126): warning C4302: '類型轉換': 從 'HashStruct *' 轉換為 'unsigned long'，是由較大的類型轉換為較小的類型，可能導致資料遺失 (正在編譯原始程式檔 Eychessu.cpp)
+D:\edward\eychessu2019x64\Engine.h(272,16): warning C4477: 'printf' : 格式字串 '%d' 需要 'int' 類型的引數，但 variadic 引數 1 的類型為 'HashStruct *' (正在編譯原始程式檔 Eychessu.cpp)
+D:\edward\eychessu2019x64\Engine.h(272,16): warning C4313: 'printf': 格式字串中的 '%d' 與類型 'HashStruct *' 的引數 1 衝突 (正在編譯原始程式檔 Eychessu.cpp)
+D:\edward\eychessu2019x64\Engine.h(287,8): warning C4311: '類型轉換': 指標值由 'EvalHash *' 指派至 'unsigned long' 時會遭截斷 (正在編譯原始程式檔 Eychessu.cpp)
+D:\edward\eychessu2019x64\Engine.h(287,8): warning C4302: '類型轉換': 從 'EvalHash *' 轉換為 'unsigned long'，是由較大的類型轉換為較小的類型，可能導致資料遺失 (正在編譯原始程式檔 Eychessu.cpp)
+D:\edward\eychessu2019x64\Engine.h(294,138): warning C4311: '類型轉換': 指標值由 'EvalHash *' 指派至 'unsigned long' 時會遭截斷 (正在編譯原始程式檔 Eychessu.cpp)
+D:\edward\eychessu2019x64\Engine.h(294,138): warning C4302: '類型轉換': 從 'EvalHash *' 轉換為 'unsigned long'，是由較大的類型轉換為較小的類型，可能導致資料遺失 (正在編譯原始程式檔 Eychessu.cpp)
+D:\edward\eychessu2019x64\Engine.h(294,16): warning C4477: 'printf' : 格式字串 '%d' 需要 'int' 類型的引數，但 variadic 引數 1 的類型為 'EvalHash *' (正在編譯原始程式檔 Eychessu.cpp)
+D:\edward\eychessu2019x64\Engine.h(294,16): warning C4313: 'printf': 格式字串中的 '%d' 與類型 'EvalHash *' 的引數 1 衝突 (正在編譯原始程式檔 Eychessu.cpp)
+  ucci.cpp
+D:\edward\eychessu2019x64\base2.h(51,5): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. (正在編譯原始程式檔 pipe.cpp)
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(133): message : 請參閱 'strcpy' 的宣告 (正在編譯原始程式檔 pipe.cpp)
+D:\edward\eychessu2019x64\base2.h(56,7): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. (正在編譯原始程式檔 pipe.cpp)
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(133): message : 請參閱 'strcpy' 的宣告 (正在編譯原始程式檔 pipe.cpp)
+D:\edward\eychessu2019x64\base2.h(58,7): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. (正在編譯原始程式檔 pipe.cpp)
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(133): message : 請參閱 'strcpy' 的宣告 (正在編譯原始程式檔 pipe.cpp)
+D:\edward\eychessu2019x64\pipe.cpp(13,3): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(133): message : 請參閱 'strcpy' 的宣告
+D:\edward\eychessu2019x64\pipe.cpp(17,5): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(133): message : 請參閱 'strcpy' 的宣告
+D:\edward\eychessu2019x64\pipe.cpp(20,5): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(133): message : 請參閱 'strcpy' 的宣告
+D:\edward\eychessu2019x64\pipe.cpp(138,30): warning C4267: '=': 將 'size_t' 轉換為 'int'，資料可能遺失
+D:\edward\eychessu2019x64\pipe.cpp(225,26): warning C4244: '=': 將 '__int64' 轉換為 'int'，由於類型不同，可能導致資料遺失
+D:\edward\eychessu2019x64\base2.h(51,5): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. (正在編譯原始程式檔 ucci.cpp)
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(133): message : 請參閱 'strcpy' 的宣告 (正在編譯原始程式檔 ucci.cpp)
+D:\edward\eychessu2019x64\base2.h(56,7): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. (正在編譯原始程式檔 ucci.cpp)
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(133): message : 請參閱 'strcpy' 的宣告 (正在編譯原始程式檔 ucci.cpp)
+D:\edward\eychessu2019x64\base2.h(58,7): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. (正在編譯原始程式檔 ucci.cpp)
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(133): message : 請參閱 'strcpy' 的宣告 (正在編譯原始程式檔 ucci.cpp)
+D:\edward\eychessu2019x64\parse.h(23,3): warning C4996: 'strnicmp': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _strnicmp. See online help for details. (正在編譯原始程式檔 ucci.cpp)
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(560): message : 請參閱 'strnicmp' 的宣告 (正在編譯原始程式檔 ucci.cpp)
+D:\edward\eychessu2019x64\parse.h(92,7): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. (正在編譯原始程式檔 ucci.cpp)
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(133): message : 請參閱 'strcpy' 的宣告 (正在編譯原始程式檔 ucci.cpp)
+D:\edward\eychessu2019x64\parse.h(98,1): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. (正在編譯原始程式檔 ucci.cpp)
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(338): message : 請參閱 'strncpy' 的宣告 (正在編譯原始程式檔 ucci.cpp)
+D:\edward\eychessu2019x64\parse.h(111,7): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. (正在編譯原始程式檔 ucci.cpp)
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(133): message : 請參閱 'strcpy' 的宣告 (正在編譯原始程式檔 ucci.cpp)
+D:\edward\eychessu2019x64\parse.h(117,1): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. (正在編譯原始程式檔 ucci.cpp)
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(338): message : 請參閱 'strncpy' 的宣告 (正在編譯原始程式檔 ucci.cpp)
+D:\edward\eychessu2019x64\parse.h(127,1): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. (正在編譯原始程式檔 ucci.cpp)
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\stdio.h(2263): message : 請參閱 'sscanf' 的宣告 (正在編譯原始程式檔 ucci.cpp)
+D:\edward\eychessu2019x64\ucci.cpp(37,5): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(133): message : 請參閱 'strcpy' 的宣告
+LINK : warning LNK4075: 忽略 '/INCREMENTAL'，由於 '/LTCG' 規格
+  正在產生程式碼
+  已完成程式碼產生
+  Eychessu.vcxproj -> D:\edward\eychessu2019x64\x64\Release\Eychessu2019x64.exe

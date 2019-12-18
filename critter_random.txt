@@ -1,0 +1,45 @@
+This is what Critter uses:
+
+Code:
+
+const unsigned int rnd_seed[55] = {
+  0x5414d5f4, 0xb3935330, 0xd0773e27, 0xac62a182,
+  0x5db20c92, 0xc1e618ac, 0xd003926a, 0x171fa3b3,
+  0x9ad12101, 0x762172c1, 0xbc5d9dc3, 0x07b72a70,
+  0x6e5ac890, 0xf7be54d1, 0x0d6332fa, 0x56ba8fbe,
+  0xeba585ec, 0x571421c5, 0x96b3c079, 0x12eb9b92,
+  0xc07c0978, 0x0700c5bd, 0x31a43513, 0x74eba4aa,
+  0x4ec55db5, 0x2c91c2e9, 0x208771f6, 0x304ee204,
+  0x1e004673, 0xf3ac22f9, 0xa8561feb, 0xded13435,
+  0xd03e7513, 0xdae66bc2, 0x01c20be1, 0x46638997,
+  0xfb26ce62, 0x01f87fc3, 0xc0016099, 0x44429270,
+  0xb04f4481, 0xf31b8ad7, 0x86dd7a46, 0x03e72091,
+  0x96a22589, 0x74dcb7d4, 0x12d0fc03, 0x474a16e8,
+  0x2ff5717c, 0x54bded92, 0x783a9487, 0xe767978c,
+  0x3052d5cd, 0x16eca191, 0x8eaf6d15
+};
+
+static unsigned int rnd_tab[55];
+static int rnd_j, rnd_k;
+
+void init_random() {
+  for (int i = 0; i < 55; i++)
+    rnd_tab[i] = rnd_seed[i];
+  rnd_j = 23;
+  rnd_k = 54;
+}
+
+unsigned int random32() {
+  unsigned int rnd = (rnd_tab[rnd_k] += rnd_tab[rnd_j]);
+  if (--rnd_j < 0) rnd_j = 54;
+  if (--rnd_k < 0) rnd_k = 54;
+  return rnd;
+}
+
+Key random64() {
+  Key a = random32(), b = random32();
+  return (a << 32 | b);
+}
+
+
+PS. "Key" is a typedef for "uint64_t"

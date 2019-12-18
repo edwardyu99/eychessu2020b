@@ -1,0 +1,43 @@
+Indeed it is kind of confusing the way it is presented in the paper as a distributed algorithm. But it is a neat algorithm that incorporates YBW in it without splitting and other complex stuff. Here is how I understood it. 
+
+a) You start two or more threads (processes are better) from the root to do independent searches. With this simple scheme most of the work will be redundant. Even if one thread is started later than the other, it will quickly catch up to searching same part of the tree because of hash cutoffs from result of the first thread. This is important because we will try to exploit it by devising a work sharing scheme as in (b). You can see there will be some speed up even without any enhancements, and indeed i get a speed up of about 1.1x with it. 
+
+b) We know the threads spend their time more or less in the same part of the tree so we plan to divide work by a two pass scheme. We can arbitrarily let one thread do the even moves and the other to do the odd numbered moves. But we need a second pass to complete the evaluation of the position with the roles reversed. But that is not how it is actually done in ABDADA. It uses an 'exclusiveP' flag to indicate moves to be searched exclusively. Threads can pick moves as they get them (i.e not even/odd manner) but the effect is the same. To get the YBW effect a two pass search is made as follows: 
+
+The first move is always searched by both threads non-exclusively. So both threads will have a proper bound to begin with. 
+On the first pass the threads search moves exclusively. If a thread picks a move, it will store a flag CRAP in TT entry. The paper increments and decrement number of processors (nprocs) but i didn't need that. Anyway when the other thread sees this flag, it skips searching that move and picks another which is how the work is shared. 
+On the second pass, the threads search the moves they skipped in the first pass to complete their solution. Hopefully the other thread has searched the skipped moves so this pass will be pretty fast. If not it will search them and complete by itself. 
+
+So exclusiveP=false for the first move and the second pass, while it is set to true on the first pass where moves are searched exclusively. There is a pseudo code in chesswiki by Gerd that is easier to read than the one in the paper.
+_________________
+https://sites.google.com/site/dshawul/ 
+https://github.com/dshawul
+
+https://github.com/dshawul/Scorpio
+---------------------------------------------------------------------
+
+Am I correct that schematically your scheme is 
+as follows (for simplicity I am ignoring the first move) 
+
+Code:
+
+first pass: 
+for all moves (other than the first one) do 
+  MakeMove 
+  search(depth-1,exlusive=1) 
+  If CRAP is set in child node 
+    return to parent 
+    Unmake move and store move for second pass 
+  else 
+    set CRAP flag in child 
+    search child node 
+    store result and reset CRAP 
+    return to parent 
+
+second_pass: 
+    search all stored moves with search(depth-1,exclusive=0); children 
+    now now ignore the CRAP flag. 
+
+
+It seems that this should indeed work and would be more robust 
+against synchronization errors than using nproc.

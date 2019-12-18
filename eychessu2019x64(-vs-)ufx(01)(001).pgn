@@ -1,0 +1,54 @@
+[Game "Chinese Chess"]
+[Event "引擎联赛_2019.09.02 15.20.44"]
+[Round "1.2.1"]
+[Date "2019.12.15"]
+[Site "CHINA"]
+[RedTeam "D:\edward\eychessu2019x64\x64\Release\Eychessu2019x64.exe"]
+[Red "eychessu2019x64"]
+[BlackTeam "Engines\ufx\UFX.exe"]
+[Black "ufx"]
+[TimeControl "1+0+0 0"]
+[RedTime "12.765"]
+[BlackTime "15.407"]
+[Result "0-1"]
+[ECCO ""]
+[Opening ""]
+[Variation ""]
+[FEN "2bakab2/7cr/2n3nc1/p3p1N1p/2p6/1rP3P2/P3P3P/1CN1C4/3R5/R1BAKAB2 b - - 0 1"]
+     车２平３ {score:60 time:1094 side:1}
+  2. 马七进六 {score:-560 time:1109}
+     后炮平４ {score:-71 time:1437}
+  3. 车六平二 {score:55 time:1141}
+     炮４进８ {score:-198 time:2031}
+  4. 车九进一 {score:215 time:1125}
+     炮８平９ {score:-253 time:1610}
+  5. 马六进四 {score:62 time:1125}
+     车９平２ {score:-197 time:1297}
+  6. 马四进三 {score:355 time:1125}
+     车２进６ {score:-208 time:1109}
+  7. 车九平四 {score:-205 time:1109}
+     士４进５ {score:-409 time:1500}
+  8. 后马进一 {score:-221 time:1110}
+     象７进９ {score:-454 time:1297}
+  9. 车四平八 {score:-326 time:1109}
+     车２进１ {score:-773 time:1062}
+ 10. 炮五平三 {score:-590 time:1110}
+     车２平８ {score:-6903 time:937}
+ 11. 相七进五 {score:-5261 time:1078}
+     车３平２ {score:-8725 time:1110}
+ 12. 仕四进五 {score:-5397 time:1125}
+     炮４平１ {score:-29989 time:328}
+ 13. 炮三平一 {score:-8180 time:109}
+     将５平４ {score:-29993 time:172}
+ 14. 炮一退二 {score:-8183 time:156}
+     车２进４ {score:-29995 time:141}
+ 15. 相五退七 {score:-8185 time:125}
+     车２平３ {score:-29997 time:125}
+ 16. 仕五退六 {score:-8187 time:109}
+     车３平４ {红方被将死,黑方胜！
+
+红方分数：-29999
+黑方用时：    15.407秒
+红方用时：    12.765秒
+双方实际花费时间：    28.172秒}
+ 0-1

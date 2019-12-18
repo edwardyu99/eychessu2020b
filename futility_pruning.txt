@@ -1,0 +1,145 @@
+In my engine I use both. 
+
+Before the null move pruning and after the hash probe I have a similar condition: 
+Code:
+ if (node!=PVNODE && !InCheck && depth<FPDEPTH && (staticeval-margin[depth])>=beta && stm_has_pieces) return staticeval-margin[depth];
+
+
+And inside the moves loop I have a condition like this: 
+Code:
+ if (node!=PVNODE && !dangerousmove && depth<FPDEPTH && (staticeval+margin[depth])<alpha) continue;
+-------------------------------------
+
+
+lauriet wrote:
+During the search. 
+================== 
+If score never gets to alpha we save the node as FailLow. But no move is saved 
+If score increases alpha we save the node as exact, and the move that caused this. 
+If score > beta we save the node as a FailHigh node and the move that caused this. 
+If during a null move we have a beta cut, we save the node as FailHigh.......what move do we save ? 
+
+Before the search. 
+================== 
+Lookup the node. 
+
+IF its a FailLow node don't do a NullMove search. 
+
+IF the TT height >= Depth then the info is good to use 
+{If it is an Exact node just return the score. 
+Alpha = Max(Alpha, NodeScore) 
+If Alpha >= Beta then its a beta cut, return Beta.} 
+ELSE 
+Search the stored move since it still may give a cutoff even if the height < Depth. 
+
+
+
+So if a null move causes a beta cut we don't have a move to save. What do we do here ? 
+
+
+Thanks 
+Laurie.
+
+
+Some terminology to make sure you avoid mistakes: 
+
+You store an UPPER flag, indicating that this is a bound, but it is an upper bound. The actual score might be lower. If you think about alpha/beta, when you search all moves, you know that the score can't be > alpha, and that it is probably lower. Hence alpha is an UPPER bound on the score (sounds backward, but this is the terminology everyone uses). 
+
+You store a LOWER flag, indicating that this is a lower bound. IE the search returned a value >= beta, so you store beta. But beta is a LOWER bound on the score which is probably higher. 
+
+EXACT is pretty obvious. 
+
+A couple of mistakes in your comments: 
+
+(1) if score is >= beta, you should store LOWER. NOT just > beta. 
+
+(2) ditto for score <= alpha, you store UPPER, not just < alpha. 
+
+For the null-move question, if it failed high, you don't have a move to save. 
+
+For the lookup part, that seems a bit confused. You have three cases, all assume that stored draft >= remaining depth of course. 
+
+(1) entry = EXACT. Just return that value instantly. 
+
+(2) entry = LOWER. If tt bound is >= beta, then you can return beta instantly. 
+
+(3) entry = UPPER. If tt bound is <= alpha, then you can return alpha instantly. 
+
+The easy way to think of this is as follows. Whatever you did when you stored the entry, you want to do the SAME thing here, exactly, assuming the draft is sufficient and the bounds satisfy the above tests. If you searched all moves without modifying alpha and then stored that result, then you want to return alpha here just like you did when you stored the entry.
+
+lauriet wrote:
+During the search. 
+================== 
+If score never gets to alpha we save the node as FailLow. But no move is saved 
+
+
+Yes, though fail-soft can still give you a move. The ordering tends to be fairly worthless though. 
+
+Quote:
+
+If score increases alpha we save the node as exact, and the move that caused this. 
+If score > beta we save the node as a FailHigh node and the move that caused this. 
+
+
+Yes, though I think you mean >= beta. 
+
+Quote:
+
+If during a null move we have a beta cut, we save the node as FailHigh.......what move do we save ? 
+
+
+You just don't save a move, same as a fail low node. You can still get TT score cutoffs, which don't need a move. 
+
+Quote:
+
+Before the search. 
+================== 
+Lookup the node. 
+
+IF its a FailLow node don't do a NullMove search. 
+
+
+Correct, though determining ALL versus CUT nodes is somewhat difficult. 
+
+Quote:
+
+IF the TT height >= Depth then the info is good to use 
+{If it is an Exact node just return the score. 
+Alpha = Max(Alpha, NodeScore) 
+If Alpha >= Beta then its a beta cut, return Beta.} 
+
+
+This looks odd to me. If you have the upper bound/lower bound flags set, wouldn't it make more sense to check if stored score is >= beta on an indicated fail high node and check if the score is <= alpha on an indicated fail low node instead of shenanigans with max() that probably won't work on a fail low node? 
+
+Quote:
+
+ELSE 
+Search the stored move since it still may give a cutoff even if the height < Depth. 
+
+
+Yes, since most of the time you will still get a cutoff. 
+
+Quote:
+
+So if a null move causes a beta cut we don't have a move to save. What do we do here ? 
+
+
+Don't save a move. Alternatively, don't store nullmove scores in the TT. YMMV. 
+--------------------------------------------
+
+zd3nik wrote:
+ZirconiumX wrote:
+Quote:
+
+So if a null move causes a beta cut we don't have a move to save. What do we do here ? 
+
+
+Don't save a move. Alternatively, don't store nullmove scores in the TT. YMMV. 
+
+
+Hmmm. I've never stored beta cutoffs from a null move search in the TT. What depth would you use? Can the score really be considered reliable? Perhaps I should give it a try. 
+
+Of the engine developers out there that do store null move beta cutoffs in the TT, how do you determine the depth to set on the entry? And do you use any special handling for such cases?
+
+
+You use the normal depth. Why? This is about saving effort. If you reach position P with depth D and null-search fails high, you store P with depth D and "LOWER" flag. Then when you reach P through a different path, you get the instant cutoff and avoid doing even the null-move search, which would obviously also fail high here since it is the same position.

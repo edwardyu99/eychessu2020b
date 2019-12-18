@@ -1,0 +1,17 @@
+position fen R2ak4/3C5/2C1ba3/n1p1p2rp/7n1/2P6/4Pc3/4B4/9/3AKA3 w - - 0 32
+go time 26661 increment 0 opptime 21361 oppincrement 0 limittime 60000 steptime 0 byotime 0
+Info MaxTime:987
+info depth 1 score 40 time 0 nodes 89 nps 89000 pv a9a6
+info depth 2 score 42 time 0 nodes 181 nps 181000 pv a9a6 h5f4 a6c6
+info depth 3 score 42 time 1 nodes 341 nps 341000 pv a9a6 h5f4 a6c6 d9e8
+info depth 4 score 70 time 3 nodes 1693 nps 564333 pv a9a6 d9e8 a6a9 e8d9 d8b8
+info depth 5 score 59 time 4 nodes 2622 nps 655500 pv a9a6 h5f4 a6c6 h6h1 c7c9 d9e8
+info depth 6 score 46 time 9 nodes 6005 nps 667222 pv a9a6 h5f4 c7c9 d9e8 a6c6 f4h3 e0e1 h6f6
+info depth 7 score 42 time 17 nodes 12044 nps 708470 pv a9a6
+info depth 8 score 42 time 31 nodes 23307 nps 751838 pv a9a6
+info depth 9 score 59 time 81 nodes 60599 nps 748135 pv c7c9 d9e8
+info depth 10 score 49 time 137 nodes 102991 nps 751759 pv c7c9 d9e8 c9c7 e8d9 c7c9
+info depth 11 score 41 time 219 nodes 167857 nps 766470 pv c7c9 d9e8 c9c7 e8d9 c7c9
+info depth 12 score 41 time 533 nodes 377408 nps 708082 pv c7c9 e9e8
+quit
+quit

@@ -1,0 +1,36 @@
+What WinBoard currently does is this:
+
+When the current position occurs for the 3rd time, you loop through all moves since the first occurrence, to judge if a move qualifies as a chase, and if so, what it chases. This uses the following algorithm:
+
+Code:
+1) Run through all legal captures the side that moved has _after_ his move, (i.e. when the opponent would reply with null move) and treat them as follows:
+  a) Captures with King => no chase (i.e. ignore)
+  b) Captures with Pawn => no chase
+  c) Captures of a Pawn that has not yet crossed the river => no chase
+  d) CxR or HxR captures => candidate chase (i.e. save on chase stack)
+  d) Equal captures (RxR, CxC, HxH):
+      If the reverse capture is possible (for H it can be blocked) and legal => no chase
+  e) If, after making the capture, no quasi-legal recapture (i.e. to the same square) is possible => chase candidate
+  f) none of the above => no chase
+
+
+A quasi-legal capture is a capture that does not put you in new checks. So if the move under scrutiny was a check, you mark the pieces that were attacking the King (there can be upto 4 in XQ), you try all pseudo-legal recaptures, and if after them their King is not in check by a non-marked piece, the recapture was quasi-legal. (The rationale is that you have to wait until it is your turn before you can actually make the initiating capture, and by that time the check must have been solved.)
+
+You are now left with a stack containing zero or more capture moves, ((from,to) pairs), all chase candidates. Next thing you do is
+
+Code:
+2) run through all quasi-legal captures the side that moved had _before_ its move.
+  a) remove that move from the chase stack if it was there
+  b) if the capture is with the piece that made the move under scrutiny, replace its from-square of the capture by the to-square of the moved piece before looking for it on the chase stack.
+
+
+At this point the moves left on the chase stack are all chases. That is, the moves were too dangerous to ignore, and are newly created by the move under scrutiny, in the sense that they were not quasi-legal before that move, and became fully legal after it. (The quasi-legality is to make that merely resolving a check does notqualify allyour existing attacks as chases.)
+
+Code:
+3) Collapse the set of chase moves to a set of pieces chased on this move, by ignoring the from squares.
+4) Intersect this set of chased pieces with the set of perpetually chased pieces (which was initialized to contain all opponent pieces)
+
+
+Steps 1-4 are then repeated for all moves of that same side in the loop (1st-3rd occurrence). When afterwards the set of perpetually chased pieces is non-empty, that side is perpetually chasing. Note that the chased pieces in general move around, so that when you store them by the square they are on, you will have to adapt the square on opponent moves to the new position before making the intersection.
+
+Then repeat the entire process for the opponent. If both are chasing, or neither is chasing, the game is a draw. If oneof them was chasing, and the other not, the side that is chasing loses.
