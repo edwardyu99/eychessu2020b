@@ -1,6 +1,6 @@
 //#include "stdafx.h"
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Eychessu.cpp V2019x                                                                                //
+// Eychessu.cpp V2019y                                                                                //
 // Author: Edward Yu                                                                                         //
 // Reference: HIce 1.02 + EleEye 1.5
 // *******************************************************************************************************//
@@ -8,6 +8,7 @@
 // 1. 控制台应用程序的入口点                                                                              //
 // 2. 通过ucci协议与界面程序之间进行通讯    
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 20191218 - 2019y add to github   
 // 20191214 - 2019x use sf10 null search  
 // 20191213 - 2019w remove ponder logic 
 // 20191210 - 2019v use triangular pv array
@@ -466,9 +467,9 @@ printf("*** parm1=%d, parm2=%d\n", mf, mf2);
 	int Src,Dst;
 	MoveStruct moveS;
 #ifdef _WIN64
-	printf("Eychessu64 2019x (logical NCORE=%d, popcnt=%d) by Edward Yu\n", NCORE, POPCNT_CPU);
+	printf("Eychessu64 2019y (logical NCORE=%d, popcnt=%d) by Edward Yu\n", NCORE, POPCNT_CPU);
 #else	
-	printf("Eychessu 2019x (logical NCORE=%d, popcnt=%d) by Edward Yu\n", NCORE, POPCNT_CPU);
+	printf("Eychessu 2019y (logical NCORE=%d, popcnt=%d) by Edward Yu\n", NCORE, POPCNT_CPU);
 #endif	
 	fflush(stdout);
 
@@ -518,9 +519,9 @@ printf("*** parm1=%d, parm2=%d\n", mf, mf2);
 
 		//显示引擎的名称、版本、作者和使用者
 #ifdef _WIN64		
-		printf ("id name Eychessu64 V2019x\n"); fflush(stdout);
+		printf ("id name Eychessu64 V2019y\n"); fflush(stdout);
 #else		
-    printf ("id name Eychessu V2019x\n"); fflush(stdout);
+    printf ("id name Eychessu V2019y\n"); fflush(stdout);
 #endif
 		printf ("id copyright Edward Yu \n"); fflush(stdout);
 		printf ("id author Edward Yu \n");  fflush(stdout);

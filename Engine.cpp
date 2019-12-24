@@ -4561,8 +4561,8 @@ improving =   ss->staticEval >= (ss-2)->staticEval
 
         // Null move dynamic reduction based on depth and value
         //1213 Depth R = ((823 + 67 * depth / ONE_PLY) / 256 + std::min(int(eval - beta) / 200, 3)) * ONE_PLY;
-        int R = ((823 + 67 * depth ) / 256 + std::min(int(evalscore - beta) / mf, 3)) ;  //1215 260-270 sf10 /200
-        //int R = (3 + depth / 4) + std::min(int(evalscore - beta) / 256, 3);  //1214 sf10 /200	
+        //2019x int R = ((823 + 67 * depth ) / 256 + std::min(int(evalscore - beta) / 258, 3)) ;  //1215 260-270 sf10 /200
+        int R = (3 + depth / 4) + std::min(int(evalscore - beta) / 256, 3);  //1218 	
         //  int R = (3 + depth / 4) + (evalscore >= beta + VN);
         // const int nextDepth = depth - R, R = (3 + depth / 4) + (refinedEval >= beta + 167);
         // depth  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19  

@@ -4561,7 +4561,7 @@ improving =   ss->staticEval >= (ss-2)->staticEval
 
         // Null move dynamic reduction based on depth and value
         //1213 Depth R = ((823 + 67 * depth / ONE_PLY) / 256 + std::min(int(eval - beta) / 200, 3)) * ONE_PLY;
-        int R = ((823 + 67 * depth ) / 256 + std::min(int(evalscore - beta) / mf, 3)) ;  //1215 260-270 sf10 /200
+        int R = ((823 + 67 * depth ) / 256 + std::min(int(evalscore - beta) / 258, 3)) ;  //1215 260-270 sf10 /200
         //int R = (3 + depth / 4) + std::min(int(evalscore - beta) / 256, 3);  //1214 sf10 /200	
         //  int R = (3 + depth / 4) + (evalscore >= beta + VN);
         // const int nextDepth = depth - R, R = (3 + depth / 4) + (refinedEval >= beta + 167);
@@ -4610,22 +4610,11 @@ improving =   ss->staticEval >= (ss-2)->staticEval
             //1213 if (v >= beta)
             //1213    return nullValue;
             
-            
-            
-            if (depth > R + 2 )   
-            {	            
-               int v = search<NonPV>(board, beta-1, beta, depth - R -2, NULL_NO, childPv);
+                     
+               int v = search<NonPV>(board, beta-1, beta, depth-R , NULL_NO, childPv);
                if (v >= beta)
             	    return val;   
-            	   
-            	 if (depth > R + 4 )   
-               {	            
-                  int v = search<NonPV>(board, beta-1, beta, depth - R - 4, NULL_NO, childPv);
-                  if (v >= beta)
-                   return val;   
-            	 }   
-            }	
-            
+            	 
             	      
         }
     }

@@ -8,6 +8,7 @@
 // 1. 控制台应用程序的入口点                                                                              //
 // 2. 通过ucci协议与界面程序之间进行通讯    
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 20191218 - 2019y add to github   
 // 20191214 - 2019x use sf10 null search  
 // 20191213 - 2019w remove ponder logic 
 // 20191210 - 2019v use triangular pv array
@@ -395,10 +396,10 @@ fflush(stdout);
 char inifile[120];
 LocatePath(inifile, "EYCHESSU.INI");  
 mf = GetPrivateProfileInt("param","mf",4,inifile);  //clop bottom cann eval //1108
-//mf2 = GetPrivateProfileInt("param","mf2",8,inifile);  //clop bottom cann eval  
+mf2 = GetPrivateProfileInt("param","mf2",8,inifile);  //clop bottom cann eval  
 //mf3 = GetPrivateProfileInt("param","mf3",16,inifile); //clop bottom cann eval 
-printf("*** parm1=%d\n", mf); 
-//printf("*** parm1=%d, parm2=%d\n", mf, mf2); 
+//printf("*** parm1=%d\n", mf); 
+printf("*** parm1=%d, parm2=%d\n", mf, mf2); 
 // printf("*** parm1=%d, parm2=%d, parm3=%d\n",mf, mf2, mf3);
 // PawnValueEg = GetPrivateProfileInt("param","PawnValueEg",16,inifile);  //0-16 default 8 clop=5
 // mvcntfact1 = GetPrivateProfileInt("param","mvcntfact1",24,inifile);  //2-46   default 24 clop=??
