@@ -4998,7 +4998,7 @@ extern int TEMPO_BONUS;  //opening 5  //endgame 0
 //相对于红中炮对黑方的威胁,黑方情况程序回自己反过来计算
 //0   0   0  9  9  6  3  4  1  1
 //static const int SUPERCAP_SCORE[7] = {14*mf2/10, 13*mf2/10, 9*mf2/10, 5*mf2/10, 6*mf2/10, 1*mf2/10, 1*mf2/10};  //2019y //1222
-static const int SUPERCAP_SCORE[7] = {77, 71, 49, 27, 33, 5, 5};  //2019y //1222 clop max 22,55
+static const int SUPERCAP_SCORE[7] = {82, 76, 53, 29, 35, 5, 5};  //2019y //1222 clop max 20,59
 static const int SUPERCAP_BOTSCORE[7] = {7*4,6*4,4*4,2*4,2*4,1*4,1*4};
 static const int CENTRAL_HORSE_SCORE[7] = {55*4,50*4,35*4,20*4,24*4,4*4,4*4}; 
 //1125 static const int SUPERCAP_SCORE[7] = {214,199,138,77,92,15,15};   //1111
@@ -5016,7 +5016,7 @@ static const int CENTRAL_HORSE_SCORE[7] = {55*4,50*4,35*4,20*4,24*4,4*4,4*4};
 //3dc92(R=340), eyc(R=460), 460/340=1.35
 //int EMPTY_CANN_SCORE[9] = {0,0,34*4,40*4,48*4,60*4,90*4,90*4,90*4};  //2019k 
 //int EMPTY_CANN_SCORE[9] = {0,0,34*mf/10, 40*mf/10, 48*mf/10, 60*mf/10, 90*mf/10, 90*mf/10, 90*mf/10};  //2019y //1222
-int EMPTY_CANN_SCORE[9] = {0,0,74, 88, 105, 132, 198, 199, 200};  //2019y //1222 clop max 22,55
+int EMPTY_CANN_SCORE[9] = {0,0,68, 80, 96, 120, 180, 181, 182};  //2019y //1222 clop max 20,59
 int BOTTOM_CANN_SCORE[9] = {17*4,13*4,2*4,0,0,0,2*4,13*4,17*4};     //2019k
 //extern unsigned char EMPTY_CANN_SCORE[3][16]; // =  {{0,0},{0,0},{34,-34},{40,-40},{48,-48},{60,-60},{90,-90},{90,-90},{90,-90}};
 //1125 extern int EMPTY_CANN_SCORE[9]; // = {0,0,34,40,48,60,90,90,90};

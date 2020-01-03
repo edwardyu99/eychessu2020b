@@ -1,103 +1,105 @@
-﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(459,5): warning MSB8028: The intermediate directory (x64\Release\) contains files shared from another project (Eychessu2019x64.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(459,5): warning MSB8028: The intermediate directory (x64\Release\) contains files shared from another project (Eychessu2019x64.vcxproj, Eychessu2019y64.vcxproj).  This can lead to incorrect clean and rebuild behavior.
   Board.cpp
   bookmain.cpp
   Engine.cpp
   Eychessu.cpp
-D:\edward\eychessu2019y64\Eychessu.cpp(1,1): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
-D:\edward\eychessu2019y64\engine.h(253,56): warning C4334: '<<': result of 32-bit shift implicitly converted to 64 bits (was 64-bit shift intended?) (compiling source file Engine.cpp)
-D:\edward\eychessu2019y64\engine.h(265,8): warning C4311: 'type cast': pointer truncation from 'HashStruct *' to 'unsigned long' (compiling source file Engine.cpp)
-D:\edward\eychessu2019y64\engine.h(265,8): warning C4302: 'type cast': truncation from 'HashStruct *' to 'unsigned long' (compiling source file Engine.cpp)
-D:\edward\eychessu2019y64\engine.h(272,126): warning C4311: 'type cast': pointer truncation from 'HashStruct *' to 'unsigned long' (compiling source file Engine.cpp)
-D:\edward\eychessu2019y64\engine.h(272,126): warning C4302: 'type cast': truncation from 'HashStruct *' to 'unsigned long' (compiling source file Engine.cpp)
-D:\edward\eychessu2019y64\engine.h(272,16): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type 'HashStruct *' (compiling source file Engine.cpp)
-D:\edward\eychessu2019y64\engine.h(272,16): warning C4313: 'printf': '%d' in format string conflicts with argument 1 of type 'HashStruct *' (compiling source file Engine.cpp)
-D:\edward\eychessu2019y64\engine.h(287,8): warning C4311: 'type cast': pointer truncation from 'EvalHash *' to 'unsigned long' (compiling source file Engine.cpp)
-D:\edward\eychessu2019y64\engine.h(287,8): warning C4302: 'type cast': truncation from 'EvalHash *' to 'unsigned long' (compiling source file Engine.cpp)
-D:\edward\eychessu2019y64\engine.h(294,138): warning C4311: 'type cast': pointer truncation from 'EvalHash *' to 'unsigned long' (compiling source file Engine.cpp)
-D:\edward\eychessu2019y64\engine.h(294,138): warning C4302: 'type cast': truncation from 'EvalHash *' to 'unsigned long' (compiling source file Engine.cpp)
-D:\edward\eychessu2019y64\engine.h(294,16): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type 'EvalHash *' (compiling source file Engine.cpp)
-D:\edward\eychessu2019y64\engine.h(294,16): warning C4313: 'printf': '%d' in format string conflicts with argument 1 of type 'EvalHash *' (compiling source file Engine.cpp)
-D:\edward\eychessu2019y64\Engine.cpp(740,1): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\edward\eychessu2020a64\Eychessu.cpp(1,1): warning C4819: The file contains a character that cannot be represented in the current code page (936). Save the file in Unicode format to prevent data loss
+D:\edward\eychessu2020a64\engine.h(253,56): warning C4334: '<<': result of 32-bit shift implicitly converted to 64 bits (was 64-bit shift intended?) (compiling source file Engine.cpp)
+D:\edward\eychessu2020a64\engine.h(265,8): warning C4311: 'type cast': pointer truncation from 'HashStruct *' to 'unsigned long' (compiling source file Engine.cpp)
+D:\edward\eychessu2020a64\engine.h(265,8): warning C4302: 'type cast': truncation from 'HashStruct *' to 'unsigned long' (compiling source file Engine.cpp)
+D:\edward\eychessu2020a64\engine.h(272,126): warning C4311: 'type cast': pointer truncation from 'HashStruct *' to 'unsigned long' (compiling source file Engine.cpp)
+D:\edward\eychessu2020a64\engine.h(272,126): warning C4302: 'type cast': truncation from 'HashStruct *' to 'unsigned long' (compiling source file Engine.cpp)
+D:\edward\eychessu2020a64\engine.h(272,16): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type 'HashStruct *' (compiling source file Engine.cpp)
+D:\edward\eychessu2020a64\engine.h(272,16): warning C4313: 'printf': '%d' in format string conflicts with argument 1 of type 'HashStruct *' (compiling source file Engine.cpp)
+D:\edward\eychessu2020a64\engine.h(287,8): warning C4311: 'type cast': pointer truncation from 'EvalHash *' to 'unsigned long' (compiling source file Engine.cpp)
+D:\edward\eychessu2020a64\engine.h(287,8): warning C4302: 'type cast': truncation from 'EvalHash *' to 'unsigned long' (compiling source file Engine.cpp)
+D:\edward\eychessu2020a64\engine.h(294,138): warning C4311: 'type cast': pointer truncation from 'EvalHash *' to 'unsigned long' (compiling source file Engine.cpp)
+D:\edward\eychessu2020a64\engine.h(294,138): warning C4302: 'type cast': truncation from 'EvalHash *' to 'unsigned long' (compiling source file Engine.cpp)
+D:\edward\eychessu2020a64\engine.h(294,16): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type 'EvalHash *' (compiling source file Engine.cpp)
+D:\edward\eychessu2020a64\engine.h(294,16): warning C4313: 'printf': '%d' in format string conflicts with argument 1 of type 'EvalHash *' (compiling source file Engine.cpp)
+D:\edward\eychessu2020a64\Engine.cpp(732,1): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\stdio.h(1774): message : see declaration of 'sprintf'
-D:\edward\eychessu2019y64\Engine.cpp(6523,25): warning C4018: '<': signed/unsigned mismatch
-D:\edward\eychessu2019y64\Engine.cpp(7037,71): warning C4018: '>=': signed/unsigned mismatch
-D:\edward\eychessu2019y64\Engine.cpp(7059,39): warning C4018: '>=': signed/unsigned mismatch
-D:\edward\eychessu2019y64\Engine.cpp(7208,20): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-D:\edward\eychessu2019y64\Engine.cpp(5039,27): warning C4018: '>=': signed/unsigned mismatch
-D:\edward\eychessu2019y64\Engine.cpp(3515): message : see reference to function template instantiation 'int Engine::search<1>(Board &,int,int,int,int,move_t [])' being compiled
+D:\edward\eychessu2020a64\Engine.cpp(2173,10): warning C4101: 'charmove': unreferenced local variable
+D:\edward\eychessu2020a64\Engine.cpp(2860,24): warning C4101: 'start_nodes': unreferenced local variable
+D:\edward\eychessu2020a64\Engine.cpp(5734,25): warning C4018: '<': signed/unsigned mismatch
+D:\edward\eychessu2020a64\Engine.cpp(6248,71): warning C4018: '>=': signed/unsigned mismatch
+D:\edward\eychessu2020a64\Engine.cpp(6270,39): warning C4018: '>=': signed/unsigned mismatch
+D:\edward\eychessu2020a64\Engine.cpp(6419,20): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+D:\edward\eychessu2020a64\Engine.cpp(4244,27): warning C4018: '>=': signed/unsigned mismatch
+D:\edward\eychessu2020a64\Engine.cpp(3010): message : see reference to function template instantiation 'int Engine::search<1>(Board &,int,int,int,int,move_t [])' being compiled
   pipe.cpp
   pregen.cpp
   rkiss.cpp
   srchboob.cpp
-D:\edward\eychessu2019y64\srchboob.cpp(98,9): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\edward\eychessu2020a64\srchboob.cpp(98,9): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(90): message : see declaration of 'strcat'
-D:\edward\eychessu2019y64\srchboob.cpp(104,5): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\edward\eychessu2020a64\srchboob.cpp(104,5): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(90): message : see declaration of 'strcat'
-D:\edward\eychessu2019y64\srchboob.cpp(91,1): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\edward\eychessu2020a64\srchboob.cpp(91,1): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\stdio.h(1774): message : see declaration of 'sprintf'
-D:\edward\eychessu2019y64\srchboob.cpp(96,1): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\edward\eychessu2020a64\srchboob.cpp(96,1): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\stdio.h(1774): message : see declaration of 'sprintf'
-D:\edward\eychessu2019y64\srchboob.cpp(102,1): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\edward\eychessu2020a64\srchboob.cpp(102,1): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\stdio.h(1774): message : see declaration of 'sprintf'
   Tokenizer.cpp
-D:\edward\eychessu2019y64\bookmain.cpp(194,36): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-D:\edward\eychessu2019y64\bookmain.cpp(221,11): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 2 has type 'unsigned __int64'
-D:\edward\eychessu2019y64\bookmain.cpp(221,11): message : consider using '%zd' in the format string
-D:\edward\eychessu2019y64\base2.h(51,5): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. (compiling source file Eychessu.cpp)
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(133): message : see declaration of 'strcpy' (compiling source file Eychessu.cpp)
-D:\edward\eychessu2019y64\base2.h(56,7): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. (compiling source file Eychessu.cpp)
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(133): message : see declaration of 'strcpy' (compiling source file Eychessu.cpp)
-D:\edward\eychessu2019y64\base2.h(58,7): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. (compiling source file Eychessu.cpp)
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(133): message : see declaration of 'strcpy' (compiling source file Eychessu.cpp)
-D:\edward\eychessu2019y64\base2.h(51,5): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. (compiling source file pipe.cpp)
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(133): message : see declaration of 'strcpy' (compiling source file pipe.cpp)
-D:\edward\eychessu2019y64\base2.h(56,7): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. (compiling source file pipe.cpp)
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(133): message : see declaration of 'strcpy' (compiling source file pipe.cpp)
-D:\edward\eychessu2019y64\base2.h(58,7): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. (compiling source file pipe.cpp)
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(133): message : see declaration of 'strcpy' (compiling source file pipe.cpp)
-D:\edward\eychessu2019y64\pipe.cpp(13,3): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(133): message : see declaration of 'strcpy'
-D:\edward\eychessu2019y64\pipe.cpp(17,5): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(133): message : see declaration of 'strcpy'
-D:\edward\eychessu2019y64\pipe.cpp(20,5): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
-C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(133): message : see declaration of 'strcpy'
-D:\edward\eychessu2019y64\pipe.cpp(138,30): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-D:\edward\eychessu2019y64\pipe.cpp(225,26): warning C4244: '=': conversion from '__int64' to 'int', possible loss of data
   ucci.cpp
-D:\edward\eychessu2019y64\Engine.h(253,56): warning C4334: '<<': result of 32-bit shift implicitly converted to 64 bits (was 64-bit shift intended?) (compiling source file Eychessu.cpp)
-D:\edward\eychessu2019y64\Engine.h(265,8): warning C4311: 'type cast': pointer truncation from 'HashStruct *' to 'unsigned long' (compiling source file Eychessu.cpp)
-D:\edward\eychessu2019y64\Engine.h(265,8): warning C4302: 'type cast': truncation from 'HashStruct *' to 'unsigned long' (compiling source file Eychessu.cpp)
-D:\edward\eychessu2019y64\Engine.h(272,126): warning C4311: 'type cast': pointer truncation from 'HashStruct *' to 'unsigned long' (compiling source file Eychessu.cpp)
-D:\edward\eychessu2019y64\Engine.h(272,126): warning C4302: 'type cast': truncation from 'HashStruct *' to 'unsigned long' (compiling source file Eychessu.cpp)
-D:\edward\eychessu2019y64\Engine.h(272,16): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type 'HashStruct *' (compiling source file Eychessu.cpp)
-D:\edward\eychessu2019y64\Engine.h(272,16): warning C4313: 'printf': '%d' in format string conflicts with argument 1 of type 'HashStruct *' (compiling source file Eychessu.cpp)
-D:\edward\eychessu2019y64\Engine.h(287,8): warning C4311: 'type cast': pointer truncation from 'EvalHash *' to 'unsigned long' (compiling source file Eychessu.cpp)
-D:\edward\eychessu2019y64\Engine.h(287,8): warning C4302: 'type cast': truncation from 'EvalHash *' to 'unsigned long' (compiling source file Eychessu.cpp)
-D:\edward\eychessu2019y64\Engine.h(294,138): warning C4311: 'type cast': pointer truncation from 'EvalHash *' to 'unsigned long' (compiling source file Eychessu.cpp)
-D:\edward\eychessu2019y64\Engine.h(294,138): warning C4302: 'type cast': truncation from 'EvalHash *' to 'unsigned long' (compiling source file Eychessu.cpp)
-D:\edward\eychessu2019y64\Engine.h(294,16): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type 'EvalHash *' (compiling source file Eychessu.cpp)
-D:\edward\eychessu2019y64\Engine.h(294,16): warning C4313: 'printf': '%d' in format string conflicts with argument 1 of type 'EvalHash *' (compiling source file Eychessu.cpp)
-D:\edward\eychessu2019y64\base2.h(51,5): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. (compiling source file ucci.cpp)
+D:\edward\eychessu2020a64\base2.h(51,5): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. (compiling source file pipe.cpp)
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(133): message : see declaration of 'strcpy' (compiling source file pipe.cpp)
+D:\edward\eychessu2020a64\base2.h(56,7): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. (compiling source file pipe.cpp)
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(133): message : see declaration of 'strcpy' (compiling source file pipe.cpp)
+D:\edward\eychessu2020a64\base2.h(58,7): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. (compiling source file pipe.cpp)
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(133): message : see declaration of 'strcpy' (compiling source file pipe.cpp)
+D:\edward\eychessu2020a64\pipe.cpp(13,3): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(133): message : see declaration of 'strcpy'
+D:\edward\eychessu2020a64\pipe.cpp(17,5): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(133): message : see declaration of 'strcpy'
+D:\edward\eychessu2020a64\pipe.cpp(20,5): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(133): message : see declaration of 'strcpy'
+D:\edward\eychessu2020a64\pipe.cpp(138,30): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+D:\edward\eychessu2020a64\pipe.cpp(225,26): warning C4244: '=': conversion from '__int64' to 'int', possible loss of data
+D:\edward\eychessu2020a64\bookmain.cpp(194,36): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+D:\edward\eychessu2020a64\bookmain.cpp(221,11): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 2 has type 'unsigned __int64'
+D:\edward\eychessu2020a64\bookmain.cpp(221,11): message : consider using '%zd' in the format string
+D:\edward\eychessu2020a64\base2.h(51,5): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. (compiling source file Eychessu.cpp)
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(133): message : see declaration of 'strcpy' (compiling source file Eychessu.cpp)
+D:\edward\eychessu2020a64\base2.h(56,7): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. (compiling source file Eychessu.cpp)
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(133): message : see declaration of 'strcpy' (compiling source file Eychessu.cpp)
+D:\edward\eychessu2020a64\base2.h(58,7): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. (compiling source file Eychessu.cpp)
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(133): message : see declaration of 'strcpy' (compiling source file Eychessu.cpp)
+D:\edward\eychessu2020a64\Engine.h(253,56): warning C4334: '<<': result of 32-bit shift implicitly converted to 64 bits (was 64-bit shift intended?) (compiling source file Eychessu.cpp)
+D:\edward\eychessu2020a64\Engine.h(265,8): warning C4311: 'type cast': pointer truncation from 'HashStruct *' to 'unsigned long' (compiling source file Eychessu.cpp)
+D:\edward\eychessu2020a64\Engine.h(265,8): warning C4302: 'type cast': truncation from 'HashStruct *' to 'unsigned long' (compiling source file Eychessu.cpp)
+D:\edward\eychessu2020a64\Engine.h(272,126): warning C4311: 'type cast': pointer truncation from 'HashStruct *' to 'unsigned long' (compiling source file Eychessu.cpp)
+D:\edward\eychessu2020a64\Engine.h(272,126): warning C4302: 'type cast': truncation from 'HashStruct *' to 'unsigned long' (compiling source file Eychessu.cpp)
+D:\edward\eychessu2020a64\Engine.h(272,16): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type 'HashStruct *' (compiling source file Eychessu.cpp)
+D:\edward\eychessu2020a64\Engine.h(272,16): warning C4313: 'printf': '%d' in format string conflicts with argument 1 of type 'HashStruct *' (compiling source file Eychessu.cpp)
+D:\edward\eychessu2020a64\Engine.h(287,8): warning C4311: 'type cast': pointer truncation from 'EvalHash *' to 'unsigned long' (compiling source file Eychessu.cpp)
+D:\edward\eychessu2020a64\Engine.h(287,8): warning C4302: 'type cast': truncation from 'EvalHash *' to 'unsigned long' (compiling source file Eychessu.cpp)
+D:\edward\eychessu2020a64\Engine.h(294,138): warning C4311: 'type cast': pointer truncation from 'EvalHash *' to 'unsigned long' (compiling source file Eychessu.cpp)
+D:\edward\eychessu2020a64\Engine.h(294,138): warning C4302: 'type cast': truncation from 'EvalHash *' to 'unsigned long' (compiling source file Eychessu.cpp)
+D:\edward\eychessu2020a64\Engine.h(294,16): warning C4477: 'printf' : format string '%d' requires an argument of type 'int', but variadic argument 1 has type 'EvalHash *' (compiling source file Eychessu.cpp)
+D:\edward\eychessu2020a64\Engine.h(294,16): warning C4313: 'printf': '%d' in format string conflicts with argument 1 of type 'EvalHash *' (compiling source file Eychessu.cpp)
+D:\edward\eychessu2020a64\base2.h(51,5): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. (compiling source file ucci.cpp)
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(133): message : see declaration of 'strcpy' (compiling source file ucci.cpp)
-D:\edward\eychessu2019y64\base2.h(56,7): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. (compiling source file ucci.cpp)
+D:\edward\eychessu2020a64\base2.h(56,7): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. (compiling source file ucci.cpp)
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(133): message : see declaration of 'strcpy' (compiling source file ucci.cpp)
-D:\edward\eychessu2019y64\base2.h(58,7): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. (compiling source file ucci.cpp)
+D:\edward\eychessu2020a64\base2.h(58,7): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. (compiling source file ucci.cpp)
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(133): message : see declaration of 'strcpy' (compiling source file ucci.cpp)
-D:\edward\eychessu2019y64\parse.h(23,3): warning C4996: 'strnicmp': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _strnicmp. See online help for details. (compiling source file ucci.cpp)
+D:\edward\eychessu2020a64\parse.h(23,3): warning C4996: 'strnicmp': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _strnicmp. See online help for details. (compiling source file ucci.cpp)
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(560): message : see declaration of 'strnicmp' (compiling source file ucci.cpp)
-D:\edward\eychessu2019y64\parse.h(92,7): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. (compiling source file ucci.cpp)
+D:\edward\eychessu2020a64\parse.h(92,7): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. (compiling source file ucci.cpp)
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(133): message : see declaration of 'strcpy' (compiling source file ucci.cpp)
-D:\edward\eychessu2019y64\parse.h(98,1): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. (compiling source file ucci.cpp)
+D:\edward\eychessu2020a64\parse.h(98,1): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. (compiling source file ucci.cpp)
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(338): message : see declaration of 'strncpy' (compiling source file ucci.cpp)
-D:\edward\eychessu2019y64\parse.h(111,7): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. (compiling source file ucci.cpp)
+D:\edward\eychessu2020a64\parse.h(111,7): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. (compiling source file ucci.cpp)
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(133): message : see declaration of 'strcpy' (compiling source file ucci.cpp)
-D:\edward\eychessu2019y64\parse.h(117,1): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. (compiling source file ucci.cpp)
+D:\edward\eychessu2020a64\parse.h(117,1): warning C4996: 'strncpy': This function or variable may be unsafe. Consider using strncpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. (compiling source file ucci.cpp)
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(338): message : see declaration of 'strncpy' (compiling source file ucci.cpp)
-D:\edward\eychessu2019y64\parse.h(127,1): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. (compiling source file ucci.cpp)
+D:\edward\eychessu2020a64\parse.h(127,1): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details. (compiling source file ucci.cpp)
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\stdio.h(2263): message : see declaration of 'sscanf' (compiling source file ucci.cpp)
-D:\edward\eychessu2019y64\ucci.cpp(37,5): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+D:\edward\eychessu2020a64\ucci.cpp(37,5): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
 C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\ucrt\string.h(133): message : see declaration of 'strcpy'
 LINK : warning LNK4075: ignoring '/INCREMENTAL' due to '/LTCG' specification
   Generating code
   Finished generating code
-  Eychessu.vcxproj -> D:\edward\eychessu2019y64\x64\Release\Eychessu2019y64.exe
+  Eychessu.vcxproj -> D:\edward\eychessu2020a64\x64\Release\Eychessu2020a64.exe

@@ -545,7 +545,7 @@ template<int nodetype>
     int ProbeMoveQ(Board &board);
 //1101    int ProbeHashExcl(Board &board, int nDepth);  //ABDADA
 //1101     void RecordHashExcl(Board &board, int hExclusive, int nDepth);   //ABDADA
-    void GetPvLine(Board &board, int *lpwmvPvLine, int mvFirst);                  // 从置换表中获得主要变例路线
+    void GetPvLine(Board &board, move_t *lpwmvPvLine, int mvFirst);                  // 从置换表中获得主要变例路线
     //int GetPvStable(int *lpwmvPvLine, int mvFirst);
     void PutPvLine(Board &board, int *PvLine, int depth, int best);
     //JNIEnv* m_env;

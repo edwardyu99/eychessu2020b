@@ -486,7 +486,7 @@ template<int nodetype>
 //1007    int quiesCheck(Board &board, int beta, int qdepth, int check_depth); //, int qcheck);
 //1123    int quiesCheckPV(Board &board, int alpha,int beta, int qdepth); 
 template<int nodetype>       
-    int quiesCheck(Board &board, int alpha, int beta, int qdepth, move_t pv[]);  //1210 use recursive pv 
+int quiesCheck(Board& board, int alpha, int beta, int qdepth); //1224 , move_t pv[]);  //1210 use recursive pv 
     void PrintLog(char *FileName, Board &board);    
     int Evalscore(Board &board); //(int alpha,int beta);    
     void print_board(int score);

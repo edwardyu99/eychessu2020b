@@ -873,8 +873,8 @@ unsigned char piececnt[34]; // = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 unsigned int bitattk[10]; // = {0,0,0,0,0,0,0,0,0,0}; //[left-right][poscolor]  [4]=black central, [5]=red central
 unsigned int bitpiece_attk; // = 0; //RrRrCcCc HhHhEeEe BbBbPpPp PpPpPpKk  //for eval forked rooks 
 
-MoveTabStruct movetab[128]; // for smp  //111= 局面的合理着法数也不会超过"MAX_MOVE_NUM / 2"
-int size; //for smp
+MoveTabStruct movetab[111]; //1226 store rootmoves for rootNode [128] for smp  //111= 局面的合理着法数也不会超过"MAX_MOVE_NUM / 2"
+int size; //for smp, no. of movetab 
 int incheck; //for smp 
 unsigned long long  m_nodes; //for smp
 unsigned long long m_startime; //for smp

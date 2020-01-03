@@ -1,6 +1,6 @@
 //#include "stdafx.h"
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// Eychessu.cpp V2019y                                                                                //
+// Eychessu.cpp V2020a                                                                                //
 // Author: Edward Yu                                                                                         //
 // Reference: HIce 1.02 + EleEye 1.5
 // *******************************************************************************************************//
@@ -8,6 +8,8 @@
 // 1. 控制台应用程序的入口点                                                                              //
 // 2. 通过ucci协议与界面程序之间进行通讯    
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// 
+// 20200102 - 2020a fix root_pv  
 // 20191218 - 2019y add to github   
 // 20191214 - 2019x use sf10 null search  
 // 20191213 - 2019w remove ponder logic 
@@ -399,7 +401,7 @@ mf = GetPrivateProfileInt("param","mf",4,inifile);  //clop bottom cann eval //11
 mf2 = GetPrivateProfileInt("param","mf2",8,inifile);  //clop bottom cann eval  
 //mf3 = GetPrivateProfileInt("param","mf3",16,inifile); //clop bottom cann eval 
 //printf("*** parm1=%d\n", mf); 
-printf("*** parm1=%d, parm2=%d\n", mf, mf2); 
+//printf("*** parm1=%d, parm2=%d\n", mf, mf2); 
 // printf("*** parm1=%d, parm2=%d, parm3=%d\n",mf, mf2, mf3);
 // PawnValueEg = GetPrivateProfileInt("param","PawnValueEg",16,inifile);  //0-16 default 8 clop=5
 // mvcntfact1 = GetPrivateProfileInt("param","mvcntfact1",24,inifile);  //2-46   default 24 clop=??
@@ -467,9 +469,9 @@ printf("*** parm1=%d, parm2=%d\n", mf, mf2);
 	int Src,Dst;
 	MoveStruct moveS;
 #ifdef _WIN64
-	printf("Eychessu64 2019y (logical NCORE=%d, popcnt=%d) by Edward Yu\n", NCORE, POPCNT_CPU);
+	printf("Eychessu64 2020a (logical NCORE=%d, popcnt=%d) by Edward Yu\n", NCORE, POPCNT_CPU);
 #else	
-	printf("Eychessu 2019y (logical NCORE=%d, popcnt=%d) by Edward Yu\n", NCORE, POPCNT_CPU);
+	printf("Eychessu 2020a (logical NCORE=%d, popcnt=%d) by Edward Yu\n", NCORE, POPCNT_CPU);
 #endif	
 	fflush(stdout);
 
@@ -519,9 +521,9 @@ printf("*** parm1=%d, parm2=%d\n", mf, mf2);
 
 		//显示引擎的名称、版本、作者和使用者
 #ifdef _WIN64		
-		printf ("id name Eychessu64 V2019y\n"); fflush(stdout);
+		printf ("id name Eychessu64 V2020a\n"); fflush(stdout);
 #else		
-    printf ("id name Eychessu V2019y\n"); fflush(stdout);
+    printf ("id name Eychessu V2020a\n"); fflush(stdout);
 #endif
 		printf ("id copyright Edward Yu \n"); fflush(stdout);
 		printf ("id author Edward Yu \n");  fflush(stdout);

@@ -1,18 +1,10 @@
-﻿#define SF10
-//#undef SF10
-#define LAZYSMP
-//#undef LAZYSMP
-#define USELAZY
-//#undef USELAZY
-//#define THDINFO
+﻿//#define THDINFO
 #undef THDINFO  
 
 //#define PREEVAL
 #undef PREEVAL
 
 //2892u - use stable_sort (stockfish-7)
-#define ASPWIN
-//#undef ASPWIN
 #define ROOTLMR
 //#undef ROOTLMR
 #define HORSECK //1881e
@@ -224,10 +216,10 @@ extern int mf2;
 //int QShashrecmiss;
 extern int POPCNT_CPU;
 extern int NCORE;
-#ifdef LAZYSMP
+
 #include <future>	
 //#include <thread>
-#endif
+
 
 //#include <csetjmp>
 #include ".\engine.h"
@@ -2121,12 +2113,7 @@ extern int p_banmove[16];
 //static const int ADVISOR_POS[5]={3,5,13,21,23};
 //static const int ELEPHAN_POS[7]={2,6,18,22,26,38,42};
 // move to lazy smp id loop
-//#ifdef ASPWIN
-//int ASP_WINDOW; //=16; //16; //32; //30; //16 //30 //30 //30 //40 //48 //24 //35 //70 //65 //40 //70 //20 //30 //40 //30 //40
-//int ValueByIteration[MAXDEPTH];
-//#else
-//#define ASP_WINDOW 0
-//#endif
+
 //static const int WINDOW[64]=   //60; //30 //40 //30 //40
 //{110,105,100,95,90,85,80,75,70,65,60, 55,50,45,40,35,35,35,35,35,35, 35,35,35,35,35,35,35,35,35,
 // 25,25,25,25,25,25,25,25,25,25, 25,25,25,25,25,25,25,25,25,25, 25,25,25,25,25,25,25,25,25,25, 25,25,25,25};
@@ -2183,7 +2170,7 @@ int Engine::searchRoot()
 //smp    int best; //, size; //, j; //RootAlpha, RootBeta, size, j; //, piecefrom; //j,banned;
 //	int alpha, beta;
  //smp   MoveStruct tempmove;
-//    char charmove[5];
+    char charmove[5];
 
 
 		board.Compress_index();
@@ -2628,10 +2615,6 @@ return 0;
     //int  tabval[111];
     //MoveTabStruct movetab[111];  //smp
     MoveTabStruct ncapmovetab[64];
-//    move_t root_pv[MAX_PLY+1]; //1210 MAX_PLY=256 //smp keep in board.h, now local in thd 
-//    memset(root_pv, 0, sizeof(root_pv));  //1210
-
-
     long ncapsize; //=0;
     //int max_root_nodes;
     board.nBanMoves = 0; 
@@ -2677,61 +2660,10 @@ return 0;
         //printf("info Root Gen OK\n");
         //fflush(stdout);
     }
-    //derive p_feeback_move from prev_piece
-    
-//    std::sort(movetab, movetab+size); //for sort root_seq
-/* //1213
-    if (p_feedback_move==0 && respmove_to_ponder !=0 && ponder_move !=0)
-    {
-		MoveStruct tempmove;
-     for (int p=32+board.m_side; p>1; p-=2)
-      {
-      	if (NOTSQEMPTY(prev_boardsq[p]))
-      	{
-      		if (PIECE_IDX(p) != PIECE_IDX(board.piece[prev_boardsq[p]]) )
-      		{
-              		tempmove.dest = prev_boardsq[p];
-              		break;
-          }
-      	}
-      }
-      for (int p=33-board.m_side; p>1; p-=2)
-      {
-      	if (NOTSQEMPTY(prev_boardsq[p]))
-      	{
-      		if (PIECE_IDX(p) != PIECE_IDX(board.piece[prev_boardsq[p]]) )
-      		{
-             tempmove.from = prev_boardsq[p];
-             break;
-          }
-      	}
-      }
-      
-      p_feedback_move = tempmove.move;
-    //com2char(charmove, tempmove.from, tempmove.dest );
-    //printf("derived lastmove %s from=%d dest=%d\n", charmove, tempmove.from, tempmove.dest);
-    }
-
-
-    if (p_feedback_move==0 || p_feedback_move != ponder_move)
-    {    respmove_to_ponder = 0;	//clear respmove_to_ponder if feedback not match
-    	   //ClearHash();
-    }
-*/ //1213
-    //leave more time for stopping
-
-//	  if (old_IMaxTime < 10)  // 2892q not worked, diabled
-//	  {
-//	  	board.IMaxTime /= 2;
-//		  old_IMaxTime = board.IMaxTime;
-//		  printf("     ***leave more time for stopping to avoid timeout\n");
-//		  fflush(stdout);	
-//	  }
-//-----------------------------
-    move_t dummy_pv[2]; //[MAX_PLY+1]; //1210  
-    //memset(root_pv, 0, sizeof(root_pv));  //1210
+//----------------------------- 
     MoveStruct tempmove;
     int best=-INF;
+    board.m_bestmove = board.movetab[0].table.move; //init 
     for (int i=0;i<board.size;++i)
     {    	
     		tempmove.move = board.movetab[i].table.move;
@@ -2749,13 +2681,10 @@ return 0;
             isBanmove = 1;
             break;
           }
-        }
-        
+        }        
         if (isBanmove)
         	continue;  // next i
-        	
-                //for (i=0;i<size;++i)
-            {
+        	   
                 //if ( makemove(tempmove) < 0 )
                 if ( board.makemove(tempmove, 1) < 0) //, 1) < 0 )
                 {
@@ -2773,268 +2702,73 @@ return 0;
                     board.nBanMoves ++;
                     board.unmakemove();
                 }
-
-//1213            		else if (tempmove.move == respmove_to_ponder)
-//1213            		{	//return respmove_to_ponder;
-//1213                		board.movetab[i].tabval = BIGVAL;
-//1213                    board.unmakemove();
-//1213                    best = BIGVAL;
-//1213                    board.m_bestmove = tempmove.move;
-                //start_depth = prev_ponder_depth - 1;
-                //printf("info ponder move matched\n");
-                //fflush(stdout);
-
-//1213            		}
                 else
                 {
-                    board.movetab[i].tabval = -quiesCheck<PV>(board, -INF, INF, 0, dummy_pv); //1210  
+                    board.movetab[i].tabval = -quiesCheck<PV>(board, -INF, INF, 0); //1210  
                     //board.movetab[i].tabval = -Evalscore(board); //1210                                        
-                    board.unmakemove();
-                    if (board.m_timeout)
-                    {                    	
-                    	break;
-                    }
+                    board.unmakemove();                    
                     if (board.movetab[i].tabval > best)
                     {
                     	best = board.movetab[i].tabval;
                     	board.m_bestmove = board.movetab[i].table.move;
                     }
+                    long long t_remain = board.IMaxTime - (GetTime()-board.m_startime);
+    				        if (t_remain <= 0) 
+    				        {	                     
+                  	   board.m_timeout= 1; //stop   
+                  	   printf("     *** panic! stopping at searchroot QS\n");
+			                 fflush(stdout);			
+			                 return board.m_bestmove;                	
+                    	 
+                    }
                 }
-            }
-/* lazy smp - disable time management         
-      if (board.IMaxTime < 1000)
-          {
-            BusyComm = BusyLine(UcciComm, false);
-            if (BusyComm == UCCI_COMM_STOP)
-            //if (BusyLine(UcciComm, false) == UCCI_COMM_STOP )
-            {
-            	// "stop"指令发送中止信号
-            board.m_timeout= 1;	//stop
-            //printBestmove(board.m_bestmove);
-            printf("     ***searchRoot QS stopped by GUI pv\n");
-            fflush(stdout);            
-            	break;            	
-            }
-
-            else if (BusyComm == UCCI_COMM_QUIT)
-            {
-            	p_feedback_move = -1; //pass to Eychessu.cpp to quit the engine
-            	//printf("info UCCI_COMM_QUIT p_feedback_move = %d\n", p_feedback_move);
-			        //fflush(stdout);
-            }
-           
-          	  
-    		
-    		long long t_remain = board.IMaxTime - (GetTime()-board.m_startime);
-    				if (t_remain <= 0)
-            {                        
-                  	 board.m_timeout= 1; //stop
-    printf("     *****searchRoot QS timout\n"); // %d board.ply %d board.IMaxTime %d\n", (int)(GetTime() - board.m_startime), board.ply, board.IMaxTime);
-    fflush(stdout);            	    
-                  //return UNKNOWN_VALUE;
-                  break;
-            }
-    		  }   
-*/    		  
-//        root_seq[i] = i;    
     } //end for (i=
 
-
-		if (board.m_timeout)
-		{
-#ifdef THDINFO			
-			printf("     *** panic! stopping at searchroot QS\n");
-			fflush(stdout);
-#endif			
-			return board.m_bestmove;
-		}
-
-    //Quicksort(0, size-1, movetab);
-
     std::sort(board.movetab, board.movetab + board.size);
-    //Quicksortroot(0, size-1, movetab, root_seq);	
-		//Insertsortroot(size, movetab, root_nodes);
-
-
-    /*
-    // debug after pregen g_HorseLegs
-    FILE *traceout = fopen("trace.txt", "a+"); //w+");   //use append
-    fprintf(traceout, "\n");
-    //printf("\n");
-    //fflush(stdout);
-    for (int i=0; i<10; i++)
-    {	for (int j=0; j<9; j++)
-    	{
-    		for (int k=0; k<8; k++)
-    		{
-    	fprintf(traceout, " %2d(%2d) ", g_KnightMoves[(i*16)+j][k], g_HorseLegs[(i*16)+j][k] );
-    	//printf(" %c ", PieceChar[board.piece[(i*16)+j]] );
-    		}
-    		fprintf(traceout, " %2d() ", g_KnightMoves[(i*16)+j][8] );
-    		fprintf(traceout, "|");
-    	}
-    	fprintf(traceout, "\n");
-    	//printf("\n");
-    	//fflush(stdout);
-    }
-    fflush(traceout);
-    //fflush(stdout);
-      fclose(traceout);
-    */
-
-    /*
-    // debug after fen position moves
-    //    FILE *traceout = fopen("trace.txt", "a+"); //w+");   //use append
-    //fprintf(traceout, "\n");
-    printf("\n");
-    fflush(stdout);
-    for (int i=0; i<10; i++)
-    {	for (int j=0; j<9; j++)
-    	{
-    	//fprintf(traceout, " %c ", PieceChar[board.piece[(i*9)+j]] );
-    	printf(" %c ", PieceChar[board.piece[(i*16)+j]] );
-    	}
-    	//fprintf(traceout, "\n");
-    	printf("\n");
-    	fflush(stdout);
-    }
-    //fflush(traceout);
-    //fclose(traceout);
-    */
-
-
-    //
-    // debug after fen position moves
-//	FILE *traceout = fopen("trace.txt", "a+"); //w+");   //use append
-//	fprintf(traceout, "\n Root moves: ");
-/*
-#ifdef PRTBOARD
-    print_board();
-    printf("\ninfo Root moves: ");
-    for (int i=0; i<size; i++)
+    board.m_bestmove = board.movetab[0].table.move;
+#ifdef PRTBOARD    
+    com2char(charmove, board.movetab[0].table.from, board.movetab[0].table.dest );
+    printf("info depth 0 score %d pv %s\n", best, charmove);	        
+	  print_board(best);
+    printf("\nAfter gen and sort rootmoves: incheck=%d, nBanMoves=%d, nRootMoves=%d", board.incheck, board.nBanMoves, board.size);
+    printf("\nRoot moves: ");
+    for (int i=0; i<board.size; i++)
     {
-        com2char(charmove, movetab[i].table.from, movetab[i].table.dest );
+        com2char(charmove, board.movetab[i].table.from, board.movetab[i].table.dest );
         //fprintf(traceout, " %s", charmove);
         printf("  %s", charmove);
-    }
-    //fprintf(traceout, "\n");
+    }    
     printf("\n");
-    //fflush(traceout);
     fflush(stdout);
-    //fclose(traceout);
-    //
-
-    printf("info Root tbval: ");
-    for (int i=0; i<size; i++)
+    
+    printf("Root tbval: ");
+    for (int i=0; i<board.size; i++)
     {
-        printf("%6d", movetab[i].tabval);
+        printf("%6d", board.movetab[i].tabval);
         //printf("%6d", root_nodes[i]);
     }
-    //fprintf(traceout, "\n");
-    printf("\n");
-
-    printf("nBanMoves=%d, incheck=%d\n", nBanMoves, incheck);
-    //fflush(traceout);
+    printf("\n"); 
     fflush(stdout);
-    //fclose(traceout);
-    //
 
-#endif
-*/
-    /*
-    printf("info pointtable: m_side=%d", board.m_side);
-    for (int i=0; i<size; i++)
-    {	piecefrom = board.piece[movetab[i].table.from];
-    	printf("%5d%5d%5d|", piecefrom, pointtable[piecefrom][movetab[i].table.from],
-    	pointtable[piecefrom][movetab[i].table.dest]);
-    }
-    //fprintf(traceout, "\n");
-    printf("\n");
-    //fflush(traceout);
-    fflush(stdout);
-    //fclose(traceout);
-    */
-
-    board.size = board.size - board.nBanMoves;
-    //board.m_bestmove=0;
-    board.m_bestmove = board.movetab[0].table.move;
-//lazy smp    m_depth = 1; //0 (1892g) 
-    //single move at root, just play it immediately
-    //if (size==1)
-    //	return board.m_bestmove;
+#endif   
+    board.size = board.size - board.nBanMoves;   //remove banmoves and illegal      
     
-// lazy smp - disable shallow move    
-    //if (board.IMaxTime <= 1000) //1892g
-//    if (board.IMaxTime <= 300)	//300 1892q
-//    {	
-    	//printf("     ***board.IMaxTime < 300, move immediate to avoid stop\n");
-    	//fflush(stdout);
-//    	printf_info_nps(movetab[0].tabval, board);
-//    	return board.m_bestmove;
-//    }	
-
     board.m_nodes=0;
     board.root_depth=1;  //init for lazy smp 
-//    m_time_check=0;
 
-//    unsigned long long start_nodes;
-//	int fpv=0;
-//    int prev_best[256]; //=-INF;
-//    int prev_bestmove[256];
-
-//move to lazy smp id loop
-//    int lastbest = INF;
-//#ifdef ASPWIN
-//    ValueByIteration[0] = movetab[0].tabval;
-//#endif
-    //int lastpv = movetab[0].table.move;
-//	int move_count;
-//    int print_depth=0;
-//	for (int i=0; i<32; i++)
-//	{	prev_best[i] = -INF;
-//		prev_bestmove[i] = 0;
-//	}
-#ifdef DEBUG
-    searchdepth=0;
-#endif
-
-
-
-// 2892q - lazy smp disable time management
-//    if (board.p_endgame && old_IMaxTime >=4000)
-//        board.IMaxTime += (board.IMaxTime>>2); //2); //1) ; //+ (board.IMaxTime>>3);  // *24 / 20
-
-//    int inc_IMaxTime = board.IMaxTime + (board.IMaxTime >>2); // + (board.IMaxTime>>3);
-//    int dec_IMaxTime = (board.IMaxTime >>1) + (board.IMaxTime >>3);  // - (board.IMaxTime >>2) - (board.IMaxTime>>3);
-
-    //int TimeSpan;
-
-    //search_stack_t *ss = sstack;
-    //HistRecord *hisptr;
-    //int from, dest, piecefrom, piecedest;
-//lazy smp - init from i=2, leave i=0 in lazy smp loop after setting valuebyiteration[0]    
-    for (int i=2;i<board.size;++i)
+//lazy smp - init from i=1, leave i=0 in lazy smp loop   
+    for (int i=1;i<board.size;++i)
     {
-//        	root_nodes[i] = 0;
         	board.movetab[i].tabval = -BIGVAL;
     }
-
 //--------------------------------------
-
-
-	        Board* spboard;     
-	        
-//	         spboard = &board; 
-	               
+	        Board* spboard;     	        
+//	         spboard = &board;              
           //Board spboardref[7];  
 					//spboardref = board;
-					
 //					A myClass02( tempClass ); //copy constructor
            //Board spboardref(board);  // copy board to spboardref
-
-					
 					//spboard = &spboardref; 
-
 //if (board.IMaxTime < 1000)
 //{
 //	IMaxDepth = 8;	
@@ -3045,7 +2779,6 @@ return 0;
 	IMaxDepth = 64;
 //}		
 	
-#ifdef LAZYSMP
 //NCORE = 2;  // lazy smp --- testing stockfish thd skipping pattern
 //#ifdef PRTBOARD
 //  NCORE = 1; //for debug
@@ -3073,29 +2806,19 @@ for (int k=0; k<NCORE-1; k++)
   f1[k] = std::async(std::launch::async, bind_search[k]);
 //    f1[k] = std::thread(bind_search[k]);
 }
-#endif
+
+	  spboard = &board; //main thread 0 points to &board
 	
-	spboard = &board; //main thread 0 points to &board
-	
-    //Iterative deepening at searchroot
-#ifdef USELAZY   
-    
     //spboard = &board; //main thread 0 points to &board
-    board.m_bestmove = Lazy_smp_ID_loop(0, spboard   
-    );
+    board.m_bestmove = Lazy_smp_ID_loop(0, spboard);
 
-#else    
-    unsigned int idx=0;
-#endif
+    int completedDepth = board.root_depth;
+    board.root_depth = -1;  // signal end of mainthread
 
-#ifdef LAZYSMP 
-int completedDepth = board.root_depth;
-board.root_depth = -1;  // signal end of mainthread
-
-for (int k = 0; k < NCORE - 1; k++)
-{ 
-  thd_bestmove[k] = f1[k].get(); 
-  //f1[k].join();
+    for (int k = 0; k < NCORE - 1; k++)
+    { 
+       thd_bestmove[k] = f1[k].get(); 
+    //f1[k].join();
   
     // sf: Check if there are threads with a better score than main thread
     // for (Thread* th : Threads)
@@ -3103,74 +2826,71 @@ for (int k = 0; k < NCORE - 1; k++)
     //          && th->rootMoves[0].score > bestThread->rootMoves[0].score)
     //          bestThread = th;
     
-    if (spboardref[k].root_depth > completedDepth
-     && spboardref[k].movetab[0].tabval > board.movetab[0].tabval  
-    	)
-    {
+       if (spboardref[k].root_depth > completedDepth
+       && spboardref[k].movetab[0].tabval > board.movetab[0].tabval  
+        	)
+       {
 #ifdef THDINFO
       printf("     **thd %d root_depth= %d > completedDepth = %d && tabval= %d > board.tabval= %d\n", 
          k+1, spboardref[k].root_depth, completedDepth, spboardref[k].movetab[0].tabval, board.movetab[0].tabval);
       fflush(stdout);       
 #endif    	    	
-    	completedDepth = spboardref[k].root_depth;
-    	board.movetab[0].tabval = spboardref[k].movetab[0].tabval;
-    	board.m_bestmove = spboardref[k].m_bestmove;
-    }	
-} 
-
-#endif 
-//debug
-#ifdef DEBUG
-    //searchdepth=depth - 1;
-    PrintLog("Search.txt");
-#endif
-
-//    if (board.m_timeout)
-//    printf_info_nps(ValueByIteration[m_depth-1], board);
-
-#ifdef USELAZY  
+    	    completedDepth = spboardref[k].root_depth;
+    	    board.movetab[0].tabval = spboardref[k].movetab[0].tabval;
+    	    board.m_bestmove = spboardref[k].m_bestmove;
+       }	
+    } 
+ 
    return board.m_bestmove;
-}    
+} //end of searchroot    
  
 //---temp undo lazy smp    
 int Engine::Lazy_smp_ID_loop(unsigned int idx, Board* spboard
 		) //, MoveTabStruct movetab[])  // idx=thread# 0=mainthread
-#endif
+
 {
 //------------------------------------------------
 	  // copy idx to board.thd_id for tracing
 	  spboard->thd_id = idx;
-	        
+	  bool mainThread = (idx==0);      
  //   int pv_i; // = -1;
     //int m_depth; // move to board.h for smp
-    int m_depth, alpha, beta, val, best, newdepth;
-    MoveStruct tempmove;
+    int m_depth, alpha, beta, best, newdepth;
     char charmove[5];
     unsigned long long start_nodes;
     int TimeSpan, nps;
-    int moveCount;
-    int old_IMaxTime = spboard->IMaxTime;    
-    int lastbest = INF;
-//    int pv_tabval;  
-
     
-//1212 moved to inside m_depth loop before ASPWIN
-//1212     move_t root_pv[MAX_PLY+1]; //1210 MAX_PLY=256 //smp keep in board.h, now local in thd 
-//1212    memset(root_pv, 0, sizeof(root_pv));  //1210
-
-#ifdef ASPWIN
-int ASP_WINDOW = 16; //8; //4; //0; //=16; //16; //32; //30; //16 //30 //30 //30 //40 //48 //24 //35 //70 //65 //40 //70 //20 //30 //40 //30 //40
-//int ValueByIteration[MAXDEPTH];
-//    ValueByIteration[0] = spboard->movetab[0].tabval;
-int asp_save_ab;
-#endif  
-
-
-
-//leave i=0 in lazy smp loop after setting valuebyiteration[0] 
-spboard->movetab[0].tabval = -BIGVAL;
-spboard->movetab[1].tabval = -BIGVAL;
-   
+    int old_IMaxTime = spboard->IMaxTime;    
+    
+//    int pv_tabval;  
+#ifdef PRTBOARD   
+#else
+if (mainThread) { 
+//	  print_board(best);
+    printf("\nStart of smp_ID_loop:");
+    printf("\nRoot moves: ");
+    for (int i=0; i<spboard->size; i++)
+    {
+        com2char(charmove, spboard->movetab[i].table.from, spboard->movetab[i].table.dest );
+        //fprintf(traceout, " %s", charmove);
+        printf("  %s", charmove);
+    }    
+    printf("\n");
+    fflush(stdout);
+    
+    printf("Root tbval: ");
+    for (int i=0; i<spboard->size; i++)
+    {
+        printf("%6d", spboard->movetab[i].tabval);
+        //printf("%6d", root_nodes[i]);
+    }
+    printf("\n"); 
+    fflush(stdout);
+} //mainThread 
+#endif        
+    
+int delta = 19; //asp_window
+int lastbest = spboard->movetab[0].tabval;   //1231 init to first root tabval //INF;
     //Iterative deepening at searchroot
     //for(depth=start_depth; depth<IMaxDepth; ++depth) //depth=1 has been qsearch??
 
@@ -3178,11 +2898,15 @@ spboard->movetab[1].tabval = -BIGVAL;
 //    if (board.IMaxTime < 10) IMaxDepth = 3;
 //    printf("     **thd %d IMaxDepth=%d\n", idx, IMaxDepth);
 //    fflush(stdout);	 
-    	    
+    best = delta = alpha = -INF;    //sf10 //1231 init bef m_depth loop
+    beta = INF;	  
+//0103    move_t prev_root_pv[MAX_PLY+1];  //0102
+    move_t root_pv[MAX_PLY+1]; //1210 MAX_PLY=256 //smp, now local in thd 
+    memset(root_pv, 0, sizeof(root_pv));  //1210                    
     for (m_depth=1; m_depth<IMaxDepth; ++m_depth) //depth=1 has been qsearch??
     {
-#ifdef LAZYSMP    
-#ifdef SF10
+//0103       memcpy(prev_root_pv, root_pv, sizeof(root_pv));  //0102
+
     	    // Sizes and phases of the skip-blocks, used for distributing search depths across the threads
   constexpr int SkipSize[]  = { 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4 };
   constexpr int SkipPhase[] = { 0, 1, 0, 1, 2, 3, 0, 1, 2, 3, 4, 5, 0, 1, 2, 3, 4, 5, 6, 7 };
@@ -3215,88 +2939,7 @@ spboard->movetab[1].tabval = -BIGVAL;
               continue;  // Retry with an incremented rootDepth
           }
       }
-#else	
-            	// Refer stockfish-7 lazy smp
-      // Set up the new depth for the helper threads skipping in average each
-      // 2nd ply (using a half density map similar to a Hadamard matrix).
-      //if (!mainThread)     
-          
-      if (idx !=0)
-      {      	  
-          //int d = rootDepth + rootPos.game_ply();
-          // Convert from fullmove starting from 1 to ply starting from 0,
-          // handle also common incorrect FEN with fullmove = 0.
-          //gamePly = std::max(2 * (gamePly - 1), 0) + (sideToMove == BLACK);
-          
-          int d = m_depth; // + board.ply; 
-
-          if (idx <= 6 || idx > 24)
-          {   //                             depth:  1 2 3 4 5 6 7 8 9 0 1 2 3 4 5 6 7 8
-          	  // stockfish skipping pattern: thd 1:  s s     s s     s s     s s     s s
-          	  //                             thd 2:  s     s s     s s     s s     s s
-          	  //                             thd 3:  s s s s         s s s s
-          	  //                             thd 4:  s s s         s s s s
-          	  //                             thd 5:  s s         s s s s    
-          	  //                             thd 6:  s
-          	  //                             thd 7:  s s   
-          	  //int idx2 = idx + 2 * (idx % 2) - 1; // idx=1 => idx2=2, idx=2 => idx2=1
-              //if (((d + idx2) >> (msb32(idx2 + 1) - 1)) % 2)
-              
-              if (((d + idx) >> (msb32(idx + 1) - 1)) % 2)  // original sf depth policy	
-              	
-              	
-              //if (d != int(3*log(1+idx)))
-              	
-              //if ((d==1) || ((d % 2) == (idx % 2)) )  //skipping d=1,3,5,..for thd=1(odd), skipping d=1,2,4,6 for thd=2(even)     
-              //if (d <= idx) // skipping depth <= thread#, in effect starting from root_depth +1, or +2          
-              { 
-              		
-              	
-#ifdef THDINFO              	  
-              	  for (int s=1; s<=idx; s++) printf("     ");              	
-                  printf("helper thd %d depth %d ...skipping, mainthd completed depth = %d\n", idx, d, board.root_depth);  
-                  fflush(stdout);    
-#endif              
-                            
-                  continue;
-                  
-              }    
-          }
-          else
-          {
-              // Table of values of 6 bits with 3 of them set
-              static const int HalfDensityMap[] = {
-                0x07, 0x0b, 0x0d, 0x0e, 0x13, 0x16, 0x19, 0x1a, 0x1c,
-                0x23, 0x25, 0x26, 0x29, 0x2c, 0x31, 0x32, 0x34, 0x38
-              };
-
-              if ((HalfDensityMap[idx - 7] >> (d % 6)) & 1)
-              {	
-#ifdef THDINFO            
-              	  for (int s=1; s<=idx; s++) printf("     "); 
-              	  printf("helper thd %d depth %d ...skipping\n", idx, d); 
-              	  fflush(stdout);  
-#endif              	    
-                  
-                  continue;
-              }    
-          }        
-        // if helper thd m_depth overrun root_depth by > +2, decrease m_depth to avoid timeout  
-        if ((m_depth > 7) && (m_depth > board.root_depth + 2))
-        {
-        	m_depth--;
-        	if (m_depth == spboard->root_depth)
-        		m_depth--;
-#ifdef THDINFO            
-              	  for (int s=1; s<=idx; s++) printf("     "); 
-              	  printf("helper thd %d depth %d overrun root_depth %d, reducing to depth %d instead\n", idx, d, board.root_depth, m_depth); 
-              	  fflush(stdout);  
-#endif         		
-        }		  
-      }
-
-#endif
-#endif  //SF10          	
+         	
         /* 根结点搜索例程，和完全搜索的区别有以下几点：
          *
          * 1. 省略无害裁剪(也不获取置换表着法)；
@@ -3306,407 +2949,108 @@ spboard->movetab[1].tabval = -BIGVAL;
          * 5. 搜索到最佳着法时要做很多处理(包括记录主要变例、结点排序等)；
          * 6. 不更新历史表和杀手着法表。
          */
-    move_t root_pv[MAX_PLY+1]; //1210 MAX_PLY=256 //smp keep in board.h, now local in thd 
-    memset(root_pv, 0, sizeof(root_pv));  //1210  
-#ifdef ASPWIN
-// use aspiration window
-  if (m_depth < 7 //5 //stcokfish-7 use asspwin for depth >=5, i.e 6 //7  
-//  	|| (idx !=0)  //20160719 test noaspwin for helper
-  	)
-	{
-		alpha = -INF;
-		beta = INF;
-	}
-	else
-	{
-		//if ((lastbest) == -DRAWVALUE)
-		//{
-		//	alpha = lastbest - 1;
-		//	beta = lastbest + 1;
-		//}
-		//else
-		{
-			// Calculate dynamic aspiration window based on previous iterations
-        //if (abs(ValueByIteration[m_depth - 1]) < WIN_VALUE)
-        if (abs(lastbest) < WIN_VALUE)
-        {
-            
-            //int prevDelta1 = lastbest                      - ValueByIteration[m_depth - 2];
-            //int prevDelta2 = ValueByIteration[m_depth - 2] - ValueByIteration[m_depth - 3];
-            //ASP_WINDOW = std::max((abs(prevDelta1) + abs(prevDelta2))/2, 16); //m_depth); //1889l 10.5-20.5-MAX,16
-            ASP_WINDOW = 16; //4;           
-            alpha = std::max(lastbest - ASP_WINDOW, -INF);
-            beta  = std::min(lastbest + ASP_WINDOW,  INF);
-//            printf("     **m_depth-2=%d, ValueByIteration[%d]=%d\n", m_depth-2, m_depth-2, ValueByIteration[m_depth-2]);
-//        fflush(stdout); 
-//                printf("     **m_depth-3=%d, ValueByIteration[%d]=%d\n", m_depth-3, m_depth-3, ValueByIteration[m_depth-3]);
-//        fflush(stdout); 
-//                printf("     **m_depth=%d, ASP_WINDOW=%d\n", m_depth, ASP_WINDOW);
-//        fflush(stdout);             
-            
-          
-            
-        }
-        else
-        {
-        	// no aspiration window if >= WIN_VALUE
-        	alpha=-INF;
-        	beta=INF;
-        }
-
-			//alpha = lastbest - ASP_WINDOW;
-			//beta  = lastbest + ASP_WINDOW;
-		}
-	}
-#else
-// no aspiration window
-        alpha=-INF;
-        beta=INF;
-
-#endif
-        spboard->ply=0;
-//		fpv=0;
-// 20160804 - replaced by sf root move ordering 
-//        pv_i = 0; //-1;
-
-//        alpha=-INF;
-//        beta=INF;
-        best=-INF;
-        int old_alpha = alpha;
-
-		  moveCount=0;    //1019
-//		bestscore=-INF;
-
-//		max_root_nodes = 0;
-        for (int i=0;i<spboard->size;++i)
-        {
-// 2892v - check if main thread run ends, abort helper threads
-#ifdef LAZYSMP
-if (idx !=0)
-{	
-  if (board.root_depth < 0)  // -1
-  {
-#ifdef THDINFO	
-	printf("     **thd %d aborted due to main thread ends, board.root_depth=%d\n", idx, board.root_depth);
-	fflush(stdout); 
-#endif
-  spboard->m_timeout = 1; 	
-  return spboard->m_bestmove;
-  }	
-
-  if (m_depth <= board.root_depth)
-  {
-#ifdef THDINFO	
-	printf("     **thd %d abort depth %d due to main thread depth=%d completed\n", idx, m_depth, board.root_depth);
-	fflush(stdout); 
-#endif		
-  break;  //break i
-  }
-}
-#endif
-
-
-            start_nodes=spboard->m_nodes;
-            //if (IsBanMove(table[i].move))
-            //	continue;
-
-            //if (makemove(movetab[i].table) < 0)
-            //{	continue;
-            //}
-            tempmove.move = spboard->movetab[i].table.move;
-            //makemoverootNochk(tempmove);
-            int capture=spboard->makemove(tempmove, 0); //, 0);
-/*            
-//ABDADA
-       int nHashExclusive = 0;
-       int this_hDepth = 0;
-       HashStruct *hsho;
-       int this_hmvBest = 0;
-       int this_hVal = 0;
-       int this_hFlag = 0;
-    //   	hsho = ProbeMove(board);		
-		//if (hsho) ttMove = get_hmv(hsho->hmvBest);
-       
-if (idx == 0)
-{	       
-	     	hsho = ProbeMove(*spboard);
-	     	if (hsho) 
-        {
-        	nHashExclusive = hsho->hExclusive;
-        	this_hmvBest = get_hmv(hsho->hmvBest);  
-        	this_hDepth = hsho->hDepth;
-        	this_hVal = hsho->hVal;
-        	this_hFlag = hsho->hFlag;
-       // }	
-       //ProbeHashExcl(*spboard, m_depth);
-	       if (nHashExclusive == 1)
-	       {
-#ifdef THDINFO
-		   printf("     **thd %d depth=%d nHashExcl=%d hmvBest=%d hDepth=%d hVal=%d hFlag=%d\n", 
-		          idx, m_depth, nHashExclusive, this_hmvBest, this_hDepth, this_hVal, this_hFlag);
-		   fflush(stdout);
-#endif       
-	       }
-	     }
-}   
-else // helper thd set HashExcl at m_depth
-	   {
-           //nHashExclusive = 1;
-           if (m_depth > board.root_depth)
-           RecordHashExcl(*spboard, 1, m_depth);  //set exclusive    
-           
-//           nHashExclusive = ProbeHashExcl(*spboard, m_depth);   
-//#ifdef THDINFO
-//		   printf("     **verify probe after record, thd %d depth=%d nHashExcl=%d\n", idx, m_depth, nHashExclusive);
-//		   fflush(stdout);
-//#endif               
-           
-       }		
-*/       	
-       	
-       	
-            //move_count++;
-            newdepth=m_depth-1;
-            if (spboard->incheck)
-            {
-            	newdepth++;
-            	//singleext at root
-            	//if (size==1)
-            	//	newdepth++;
-            }
-// LMR at root
-
-int reduced=0;
-#ifdef ROOTLMR
-		if (m_depth>= HistoryDepth && !spboard->incheck && newdepth < m_depth && i >= 5 //8 //5  //gen_count >= 6 //3 //HistoryMoveNb
-			&& (capture==0) // || tempmove.tabval < 0) //non capture or bad capture
-			&& spboard->m_hisrecord[spboard->m_hisindex-1].htab.Chk==0
-			 )
-				{
-
-	      //  if (m_depth==3 && i < 15)
-				//;
-        //    else
-//1105        if (spboard->p_endgame || ((spboard->EvalSide<1>() < THREAT_MARGIN)
-//1105      	&&  (spboard->EvalSide<0>() < THREAT_MARGIN))
-//1105					 )
-          {
-	        	reduced=1;
-	        	newdepth--;
-          }
-
-					//{
-						//newdepth -= reduced;
-					//}
-				}
-
-
-#endif
-            if (newdepth <=0)
-                val = -quiesCheck<PV>(*spboard, -INF, INF, newdepth, root_pv); //1210 
-            else
-           {
-            if (best == -INF) // || m_depth==1) //first move or searchShort
-            {    
+      // Save the last iteration's scores before first PV line is searched and
+      // all the move scores except the (new) PV are set to -VALUE_INFINITE.
+      //sf10 for (RootMove& rm : rootMoves)
+      //sf10    rm.previousScore = rm.score; 
+        
+      if (m_depth >=5) //stcokfish-7 sf10 use asspwin for depth >=5
+	    {			
+        //1231 if (abs(lastbest) < WIN_VALUE)
+            delta = 19;       
+            alpha = std::max(lastbest - delta, -INF);
+            beta  = std::min(lastbest + delta,  INF);
+    	}
+      spboard->ply=0;
+      // Start with a small aspiration window and, in the case of a fail
+      // high/low, re-search with a bigger window until we don't fail high/low anymore.            
             	int faillow_cnt = 0;
-            	int failhigh_cnt = 0;  
-            	while (true) //sf-7
-              {          
-                val = -search<PV>(*spboard, -beta, -alpha, newdepth, NULL_NO, root_pv); //, NULL_YES); //1210
-                if (spboard->m_timeout)
-                {
-#ifdef THDINFO            
-              	  for (int s=1; s<=idx; s++) printf("     "); 
-              	  printf("thd %d depth %d timeout at fail low/high\n", idx, m_depth); 
-              	  fflush(stdout);  
-#endif                 	
-                	break;
-                }		
-                // 1888v 1888y                                
-                if (val <= alpha)
-                {
-                	//sf-7: In case of failing low/high increase aspiration window and re-search              
-                	asp_save_ab = beta;
-                	beta = (alpha + beta) / 2;              //sf-7
-                  alpha = std::max(val - ASP_WINDOW, -INF);   //sf-7
-                  faillow_cnt++; 
-                  	
-                  //val = -search<PV>(*spboard, -beta, -alpha, newdepth); //sf-7
-                  	
-                	//val = -search<PV>(*spboard, -beta, INF, newdepth); //, NULL_YES);
-                	//old_alpha = alpha = -INF;      
-#ifdef THDINFO                	          	               	
-                	printf("     **thd %d fail low depth=%d, ASP_WINDOW=%d, re-search root with -beta=%d, -alpha=%d\n", idx, m_depth, ASP_WINDOW, -beta, -alpha);
-#endif
-                  if (alpha == -INF || faillow_cnt > 1)
-                  {
-                  	old_alpha = alpha = -INF; 
-                  	beta = asp_save_ab;
-                  	val = -search<PV>(*spboard, -beta, INF, newdepth, NULL_NO, root_pv);  //1210                 	
-                  	break;
-                  }	
-                  
-                  		
-                	//if (val >= beta)
-                	//{
-                	//printf("info ASP_WINDOW=%d, re-search root with -beta,INF and val>=beta\n", ASP_WINDOW);
-                	//beta = INF;
-                	//val = -search<PV>(sstack, -INF, INF, newdepth);
-                	//}
-                	
-                	
+            	int failedHighCnt = 0;
+            	while (true) 
+              {                      	
+/* sf10       Depth adjustedDepth = std::max(ONE_PLY, rootDepth - failedHighCnt * ONE_PLY);
+              bestValue = ::search<PV>(rootPos, ss, alpha, beta, adjustedDepth, false);
+              // Bring the best move to the front. It is critical that sorting
+              // is done with a stable algorithm because all the values but the
+              // first and eventually the new best one are set to -VALUE_INFINITE
+              // and we want to keep the same order for all the moves except the
+              // new PV that goes to the front. Note that in case of MultiPV
+              // search the already searched PV lines are preserved.
+              std::stable_sort(rootMoves.begin() + pvIdx, rootMoves.begin() + pvLast);
+              // If search has been stopped, we break immediately. Sorting is safe
+              // because RootMoves is still valid, although it refers to the previous iteration.
+              if (Threads.stop)  break;
+              // In case of failing low/high increase aspiration window and
+              // re-search, otherwise exit the loop.
+              if (bestValue <= alpha)
+              {   beta = (alpha + beta) / 2;
+                  alpha = std::max(bestValue - delta, -VALUE_INFINITE);
+                  if (mainThread)
+                  {   failedHighCnt = 0;
+                      failedLow = true;
+                      Threads.stopOnPonderhit = false;
+                  }
+              }
+              else if (bestValue >= beta)
+              {   beta = std::min(bestValue + delta, VALUE_INFINITE);
+                  if (mainThread)
+                	  ++failedHighCnt;
+              }
+              else break;
+              delta += delta / 4 + 5;
+          }
+          // Sort the PV lines searched so far and update the GUI
+          std::stable_sort(rootMoves.begin() + pvFirst, rootMoves.begin() + pvIdx + 1);
+          if (    mainThread
+              && (Threads.stop || pvIdx + 1 == multiPV || Time.elapsed() > 3000))
+              sync_cout << UCI::pv(rootPos, rootDepth, alpha, beta) << sync_endl;                	
+*/       
+                newdepth = std::max(1, m_depth - failedHighCnt);     	  
+                //1231 best = searchrootnode(*spboard, alpha, beta, newdepth, NULL_NO, root_pv);   
+                best = search<PV>(*spboard, alpha, beta, newdepth, NULL_NO, root_pv);   
+                if (best == UNKNOWN_VALUE)     
+                {    best = spboard->movetab[0].tabval;   //0103  best may be corrupted to unknown when timeout
+      	               spboard->m_bestmove = spboard->movetab[0].table.move; 
                 }
-                else if (val >= beta)
-                {
-                	asp_save_ab = alpha;
-                	alpha = (alpha + beta) / 2;            //sf-7 
-                  beta = std::min(val + ASP_WINDOW, INF);    //sf-7
-                  failhigh_cnt++;	
-                  //val = -search<PV>(*spboard, -beta, -alpha, newdepth); //sf-7	
-#ifdef THDINFO                  
-                  printf("     **thd %d fail high depth=%d, ASP_WINDOW=%d, re-search root with -beta=%d, -alpha=%d\n", idx, m_depth, ASP_WINDOW, -beta, -alpha);
-#endif                	
-                	if (beta == INF || failhigh_cnt > 1)
-                	{
-						        alpha = asp_save_ab;
-                		beta = INF;
-                		val = -search<PV>(*spboard, -INF, -alpha, newdepth, NULL_NO, root_pv); //, NULL_YES); //1210               	  
-                	  break;
-                	}		
+                std::stable_sort(spboard->movetab, spboard->movetab + spboard->size);	
+              // If search has been stopped, we break immediately. Sorting is
+              // safe because RootMoves is still valid, although it refers to
+              // the previous iteration.	
+                if (spboard->m_timeout) 
+                	break;                                                    
+                if (best <= alpha)
+                { beta = (alpha + beta) / 2;              
+                  alpha = std::max(best - delta, -INF);  
+                  if (mainThread)	
+                  { failedHighCnt = 0;
+                    faillow_cnt++; 
+                  }
+                }    
+                else if (best >= beta)
+                { beta = std::min(best + delta, INF);   
+                  if (mainThread)	failedHighCnt++;
+               	}               	
+                else break; //while true
                 	
-                	//val = -search<PV>(*spboard, -INF, -alpha, newdepth); //, NULL_YES);
-                	//beta = INF;
-                	//printf("info depth=%d, ASP_WINDOWS=%d, re-search root with -INF,-alpha\n", m_depth, ASP_WINDOW);
-                	//if (val <= alpha)
-                  //{
-                  	//printf("info ASP_WINDOWS=%d, re-search root with -INF,-alpha and val<=alpha\n", ASP_WINDOW);
-                	//old_alpha = alpha = -INF;
-                	//val = -search<PV>(sstack, -INF, INF, newdepth);
-                  //}
-                  
-                } 
-                else
-                	break; //while true
-                	
-                ASP_WINDOW += ASP_WINDOW / 4 + 5;  //sf-7
-                
+                delta += delta / 4 + 5;                  
                 assert(alpha >= -INF && beta <= INF);
               } //while true  	               
-            }
-            else
-            {
-                //val = -search<NonPV>(sstack, -best - 1, -best,newdepth, NodeCut, NULL_YES);
-                //if (val > best)
-                //    val = -search<NonPV>(sstack, -INF, -best,newdepth, NodePV, NULL_YES);
-                //val = -search<NonPV>(sstack, -alpha-1, -alpha, newdepth, NULL_YES);
-
-
-{
-                val = -search<NonPV>(*spboard, -alpha-1, -alpha, newdepth, NULL_YES, root_pv);  //1210
-}
-
-
-                        // history-pruning re-search
-if (spboard->m_timeout==0)
-{
-#ifdef ROOTLMR
-        			if (reduced && val >alpha) //>=beta)	//was >alpha
-        			{
-            		newdepth+=reduced;
-                //val = -search<NonPV>(sstack, -beta,-alpha, newdepth, NodePV, NULL_YES);
-                val = -search<NonPV>(*spboard, -beta, -alpha, newdepth, NULL_YES, root_pv);   //avoid double re-search //1210
-        			}
-#endif
-        if (spboard->m_timeout==0)
-        {
-                if (val > alpha)
-                {
-                    // If we are above alpha then re-search at same depth but as PV
-                        // to get a correct score or eventually a fail high above beta.
-                    //val = -search<NonPV>(sstack, -INF, -alpha, newdepth, NodePV, NULL_YES);
-                    val = -search<PV>(*spboard, -INF, -alpha, newdepth, NULL_NO, root_pv); //, NULL_YES); //1210
-                    if (val >= beta)
-                    {
-                    	beta = INF;
-                    //	//1888v
-                    //	val = -search<PV>(sstack, -INF, INF, newdepth);
-                    }
-                }
-        }
-} //endif board.m_timeout
-
-          }
-        }
-        
-        //if (nHashExclusive == 1)
-        //RecordHashExcl(*spboard, 0, 0);  //clear exclusive  ABDADA    
-            moveCount++;   //1019 fix root ordering??
-            spboard->unmakemove();
+            
                         
-            if (spboard->m_timeout) //stop
-            	break;
-//stockfish way of root move ordering
-/*            	
-if (RootNode)
-      {
-          RootMove& rm = *std::find(thisThread->rootMoves.begin(),
-                                    thisThread->rootMoves.end(), move);
+        std::stable_sort(spboard->movetab, spboard->movetab + spboard->size);	
 
-          // PV move or new best move ?
-          if (moveCount == 1 || value > alpha)
-          {
-              rm.score = value;
-              rm.pv.resize(1);
-
-              assert((ss+1)->pv);
-
-              for (Move* m = (ss+1)->pv; *m != MOVE_NONE; ++m)
-                  rm.pv.push_back(*m);
-
-              // We record how often the best move has been changed in each
-              // iteration. This information is used for time management: When
-              // the best move changes frequently, we allocate some more time.
-              if (moveCount > 1 && thisThread == Threads.main())
-                  ++static_cast<MainThread*>(thisThread)->bestMoveChanges;
-          }
-          else
-              // All other moves but the PV are set to the lowest value: this is
-              // not a problem when sorting because the sort is stable and the
-              // move position in the list is preserved - just the PV is pushed up.
-              rm.score = -VALUE_INFINITE;
-      }
-*/
-//20160804 - replaced by the above stockfish root move ordering
- // PV move or new best move ?
-          if (moveCount==1 || val > alpha)    //i==0
-          {
-              spboard->movetab[i].tabval = val; 
-          }
-          else     
-            	spboard->movetab[i].tabval = -BIGVAL;  //1212 -INF; 
-            	
-            if (val>best)
-            {
-
-                best=val;
-                if (val > alpha)
-                {
-                	//if (m_depth > 1)  //search_type not searchShort
-                	alpha = val;
-                	if (val >= beta)
-                	{
-					          //ASSERT( false );
-					          break;
-				          }
-				    		}
-
-//				bestscore=val;
-// 20160804 - replaced by sf root move ordering
-                //spboard->movetab[i].tabval = val; //replaced by sf root move ordering
                 
-                spboard->m_bestmove=tempmove.move; //movetab[i].table.move;
+
+      
+      if (best == UNKNOWN_VALUE)     
+      {    best = spboard->movetab[0].tabval;   //0103  best may be corrupted to unknown when timeout
+      	   spboard->m_bestmove = spboard->movetab[0].table.move; 
+      }
                 //1210 update root_pv
-                root_pv[0] = tempmove.move;  //1210
+//0103                memcpy(root_pv, prev_root_pv, sizeof(root_pv));  //0102
+//0103 ??updated in search()   root_pv[0] = spboard->m_bestmove;
+                
+            
 //----------------------------------------------------------------                
 //1213 print pv info immed after update root_pv and not after iteration. root_pv may be poluted in later root mv i                
               if (idx == 0)  //print pv only for main thread
@@ -3730,73 +3074,7 @@ if (RootNode)
                 }
                 printf("\n"); fflush(stdout);
               }                                
-                //update_pv(sstack, 0, board.m_bestmove);
-                //if (best != -INF)
-                //	tabval[i] = BIGVAL;
-                
-
-// 20160804 - replaced by sf root move ordering
-//                pv_i = i;
-                //	fpv=1;
-                //if (m_depth > 1) //searchshort
-                RecordHash(HASH_PV, m_depth, best, spboard->m_bestmove, *spboard); //, 0);
-//                recordhashpvcnt++;
-//print hash move for debug lazy smp    
-           
-//    char c_bestmove[5];  //, c_rootpv[5];
-//  	MoveStruct hash_tempmove;  	
-//  	hash_tempmove.move = spboard->m_bestmove;
-//  	com2char(c_bestmove, hash_tempmove.from, hash_tempmove.dest );  	
-//  	printf("     **Recordhash Pv at depth=%d best move=%s\n", m_depth, c_bestmove);
-//  	fflush(stdout);
-
-    }
-//long long t_remain = board.IMaxTime - (GetTime()-board.m_startime);
-/* 
-//lazy smp disable time management
-    				if (board.IMaxTime - (GetTime()-board.m_startime) <= 200)
-            {  
-            	board.m_timeout = 1;
-            	printf("     **next root move timeout\n");
-            	fflush(stdout);
-            	break; 
-            }
-*/
-
-
-        } //next i
-              
-        if (spboard->m_timeout)
-           	break; 
-           	
-        // sf211 - Write PV back to transposition table in case the relevant entries
-            // have been overwritten during the search.
-            //for (int i = 0; i < Min(MultiPV, (int)Rml.size()); i++)
-            //    Rml[i].insert_pv_in_tt(pos); 
-//lazy smp bug - disable putpvline            
-           // if (spboard->root_pv[0] != 0)     
-          //  if (spboard->root_pv[0] == spboard->m_bestmove) 	      
-          //  	PutPvLine(*spboard, spboard->root_pv, m_depth, best);
-//lazy smp -- stockfish-7 still write back pv for helper threads
-
-          	
-            int hashmove = 0;
-  hashmove = ProbeMoveQ(*spboard);
-  if (hashmove == 0 || hashmove != spboard->m_bestmove) //tempmove.move)
-  {
-  	/*
-  	char c_hashmove[5], c_bestmove[5]; //, c_rootpv[5];
-  	MoveStruct hash_tempmove;  	
-  	hash_tempmove.move = spboard->m_bestmove;
-  	com2char(c_bestmove, hash_tempmove.from, hash_tempmove.dest );  
-  	printf("     **thd %d depth=%d PutPv back hashmove=%s best move=%s\n", m_depth, spboard->thd_id, c_hashmove, c_bestmove);
-  	fflush(stdout);
-  	*/
-  	RecordHash(HASH_PV, m_depth, best, spboard->m_bestmove, *spboard); //tempmove.move);
-//  	recordhashpvcnt++;
-  }		
- 	
-//            	
+            	
 	    //save main and helper thread completed root_depth
       spboard->root_depth = m_depth; 
             
@@ -3822,123 +3100,36 @@ else
                   	printf("*** panic timeout!\n");
                   }
                     
-//1213 print pv info immed after update root_pv and not after iteration. root_pv may be poluted in later root mv i                
-//1213                    printf("info depth %d score %d time %d nodes %llu nps %d pv", m_depth, best, TimeSpan, spboard->m_nodes, nps);
-//1213                    fflush(stdout);
-/*
-                    //1210 GetPvLine(*spboard, root_pv, spboard->m_bestmove);  //1210 to be replaced by root_pv[]
-                    root_pv[0] = spboard->m_bestmove; //1210
-//1213                    ponder_move = 0;
-//1213                    respmove_to_ponder = 0;
-                    for (int j=0; j<MAX_PLY+1; ++j)
-                    {
-                        if (root_pv[j] == 0)
-                            break;
-                        tempmove.move = root_pv[j];                                              
-//1213                        com2char(charmove, tempmove.from, tempmove.dest );
-//1213                        printf(" %s", charmove); //fflush(stdout);
-                        if (j==0)
-                        {
-                            int piecedest=spboard->piece[tempmove.dest];
-                            if (piecedest) spboard->boardsq[piecedest]=SQ_EMPTY;
-                            spboard->boardsq[spboard->piece[tempmove.from]] = tempmove.dest;
-                            //memcpy(prev_piece, board.piece, sizeof(prev_piece));
-                            if (piecedest) spboard->boardsq[piecedest] = tempmove.dest;
-                            spboard->boardsq[spboard->piece[tempmove.from]] = tempmove.from;
-                            //prev_ponder_depth=depth;
-                        }
-//1213                        else if (j==1) ponder_move = tempmove.move;
-//1213                        else if (j==2) respmove_to_ponder = tempmove.move;
-                    }
-//1213                    printf("\n"); fflush(stdout);
-*/
                 }
-//                prev_bestmove[print_depth] = board.m_bestmove;
-//                prev_best[print_depth] = best;
-#ifdef DEBUG
-                searchdepth=m_depth;
-#endif
-               
-//                print_depth++;
-        // Stop search early if there is only a single legal move,
-            // we search up to Iteration 6 anyway to get a proper score.
-            /*
-            if (m_depth >= 6 && size==1)
-                break; //board.m_timeout = 1;
-        // Stop search early when the last two iterations returned a mate score
-            if (m_depth >= 6 && abs(best) > WIN_VALUE && abs(lastbest) > WIN_VALUE)
-            	  break; //board.m_timeout = 1;
-            */
-            //board.IMaxTime <= 4000 1892g
-            //old_IMaxTime <= 1000
+
             if (spboard->size==1 || (abs(best) > WIN_VALUE && abs(lastbest) > WIN_VALUE))
             	if (m_depth >= 6) //4 6
             	  break; 	  
-            	  
-          
-        //if(board.m_timeout) // don't break early, find faster mate // ||bestscore<=-INF+9999||bestscore>=INF-9999)
-        //if ( (size==1) || board.m_timeout
-        if ( spboard->m_timeout
-        	//|| ( (best > WIN_VALUE+128) || (best < -WIN_VALUE-128)
-        	//|| ( abs(best) > WIN_VALUE && abs(lastbest) > WIN_VALUE)
 
-        //	|| (old_IMaxTime < 2000 && m_depth >=9)
-        //	|| (old_IMaxTime < 1000 && m_depth >=5)
-
-        	)
-        {	//searchdepth=depth; // - 1;
-
-            break;
-        }
-        
-/*
-// lazy smp, disable time management
-        //check to see if we have enough time left to search for next depth, see scorpio
-        //1892g if (m_depth >=11 || (old_IMaxTime < 5000))	//11 //>=13
-        if (m_depth >=13 || (old_IMaxTime < 5000))
-        {	  int TimeRemain = old_IMaxTime - (int)(GetTime() - spboard->m_startime); //(clock() - board.m_startime) ;
-            if ((TimeRemain <=200) || (TimeRemain <= (old_IMaxTime>>2) + (old_IMaxTime>>3)))	//0.75 //0.625
-          //if (TimeSpan > old_IMaxTime * 79 / 128) //0.625
-            {
-#ifdef THDINFO            	
-                printf("     thd %d not enough time for next depth. m_depth=%d, TimeRemain=%d, old_IMaxTime=%d\n", idx, m_depth, TimeRemain, old_IMaxTime);
-                fflush(stdout);
-#endif
-                break;
-            }
-        }
-*/        
-/*
-// 2892q - try different from original 1892q -not successful, disabled now
-				// don't start new iteration if most of the time is consumed
-    		if ((GetTime() - spboard->m_startime) > old_IMaxTime * 79 / 128)   //0.617 //0.625
-{
-#ifdef THDINFO            	
-                printf("     thd %1 not enough time for next depth. m_depth=%d, old_IMaxTime=%d\n", idx, m_depth, old_IMaxTime);
-                fflush(stdout);
-#endif	
-        	break;
-}        	
-*/
-// 20160804 - replaced by sf root move ordering
-/*
-        //put this pv to the front
-        //if (pv_i >=0)
-        {
-            pv_tabval = spboard->movetab[pv_i].tabval;
-            spboard->movetab[pv_i].tabval = 0x7fff;
-
-        }
-*/        
-      
-        // Bring the best move to the front. It is critical that sorting
-              // is done with a stable algorithm because all the values but the
-              // first and eventually the new best one are set to -VALUE_INFINITE
-              // and we want to keep the same order for all the moves except the
-              // new PV that goes to the front. Note that in case of MultiPV
-              // search the already searched PV lines are preserved.	
-        std::stable_sort(spboard->movetab, spboard->movetab + spboard->size);	
-        
+#ifdef PRTBOARD   
+if (mainThread) { 
+	  
+    printf("\nEnd of depth: m_depth=%d, lastbest=%d, delta=%d, alpha=%d, beta=%d, best=%d", m_depth, lastbest, delta, alpha, beta, best);
+    printf("\nRoot moves: ");
+    for (int i=0; i<spboard->size; i++)
+    {
+        com2char(charmove, spboard->movetab[i].table.from, spboard->movetab[i].table.dest );
+        //fprintf(traceout, " %s", charmove);
+        printf("  %s", charmove);
+    }    
+    printf("\n");
+    fflush(stdout);
+    
+    printf("Root tbval: ");
+    for (int i=0; i<spboard->size; i++)
+    {
+        printf("%6d", spboard->movetab[i].tabval);
+        //printf("%6d", root_nodes[i]);
+    }
+    printf("\n"); 
+    fflush(stdout);
+} //mainThread 
+#endif        
 //      put back pv_tabval after sort 
 // 20160804 - replaced by sf root move ordering
 //        spboard->movetab[0].tabval = pv_tabval;	
@@ -3985,14 +3176,14 @@ else
 #endif
 
         lastbest = best;
-//#ifdef ASPWIN
-// 	if (idx ==0)  //20160719 test noaspwin for helper
-//        ValueByIteration[m_depth] = best;
-//        printf("     **m_depth=%d, ValueByIteration[%d]=%d\n", m_depth, m_depth, ValueByIteration[m_depth]);
-//        fflush(stdout); 
-//#endif
-        //lastpv = movetab[0].table.move;
+
 //	if (HCheckStop()) break;
+                    long long t_remain = spboard->IMaxTime - (GetTime()-spboard->m_startime);
+    				        if (t_remain <= 0) 
+    				        {	                     
+                  	   spboard->m_timeout= 1; //stop                   	
+                    	 break;
+                    }
 
     } // next depth
 
@@ -4000,10 +3191,8 @@ else
 return spboard->m_bestmove;
 }
 
-//----temp undo lazy smp    
-#ifndef USELAZY
-} // end of searchroot
-#endif
+
+
 
 //------------------------------------------------------------------------------------------------------------------
 //#define EVAL_MARGIN1 345 //256
@@ -4154,11 +3343,13 @@ static void update_history(HistStruct *hisvptr, int depth,
 template <int NT>
 int Engine::search(Board &board, int alpha, int beta, int depth, int null_allow, move_t pv[])
 {
+	  if (board.m_timeout) //stop  //0103
+      	return UNKNOWN_VALUE;    //0103 
 	  constexpr bool PvNode = (NT == PV);
-	  
+	  const bool rootNode = (PvNode && board.ply == 0);
 //1212 Allocate PV for the child node, and terminate current PV
 //1212     int ply = board.ply; //1212
-    move_t childPv[MAX_PLY]; //1212 cannot alloc dynamic[MAX_PLY - ply], alloc [MAX_PLY] instead
+    move_t childPv[MAXDEPTH]; //1212 cannot alloc dynamic[MAX_PLY - ply], alloc [MAX_PLY] instead
 //    if (PvNode)                 //1212  
        pv[0] = 0;               //1212 //1210
     
@@ -4170,7 +3361,7 @@ int Engine::search(Board &board, int alpha, int beta, int depth, int null_allow,
     {	 //if (PvNode)
     	 //	  return quiesCheckPV(board, alpha, beta, depth);
     	 // else	  
-      		return quiesCheck<NT>(board, alpha, beta, depth, childPv); //1210     
+      		return quiesCheck<NT>(board, alpha, beta, depth); //1210     
     }  
     // Step 1. Initialize node  	  
     int val, capture, incheck, newdepth, best, nHashFlag, extension, evalscore; // , futpawn_x2depth_1;
@@ -4194,8 +3385,8 @@ int Engine::search(Board &board, int alpha, int beta, int depth, int null_allow,
 //if (board.thd_id==0)
 //{ 	
 // 6. 中断调用；
-        if (board.m_timeout) //stop
-        	return UNKNOWN_VALUE;
+//0103        if (board.m_timeout) //stop
+//0103        	return UNKNOWN_VALUE;
         board.m_nodes++;
       //m_time_check++;
         //if ((m_time_check &8191)==0)  //4095)==0)
@@ -4246,6 +3437,8 @@ int Engine::search(Board &board, int alpha, int beta, int depth, int null_allow,
 //} //1006
 
 // 2. 和棋裁剪；
+   if (!rootNode)
+   {
     //if (pos.IsDraw())
     if ((board.bitpiece & 0xfff00ffc) == 0) return Evalscore(board);
     incheck=board.m_hisrecord[board.m_hisindex-1].htab.Chk;
@@ -4266,7 +3459,8 @@ int Engine::search(Board &board, int alpha, int beta, int depth, int null_allow,
         alpha = std::max(-VALUE_MATE + board.ply, alpha);
         beta = std::min(VALUE_MATE - (board.ply+1), beta);	
         if (alpha >= beta)
-            return alpha;        
+            return alpha;   
+   }     
  // Step 3. Mate distance pruning
  //   if (value_mated_in(board.ply) >= beta)
 //replace by sf10      if (-INF+board.ply >= beta)
@@ -4276,25 +3470,31 @@ int Engine::search(Board &board, int alpha, int beta, int depth, int null_allow,
 //    if (INF-(board.ply + 1) < beta)
 //        return beta - 1;
 
-int old_alpha = alpha;
 
     // 3. 重复裁剪；
 
     val=board.checkloop(1);  //1 bef927
     if (val)
      		return val;
-    
+int old_alpha = alpha;
+int prevSqdest = 0;     		
+int excludedMove = 0;  //0101    
     board.currentMove[board.ply].move = board.excludedMove[board.ply+1] = 0;  
-    int prevSqdest = board.currentMove[board.ply - 1].dest;  //to_sq((ss-1)->currentMove);  
+    if (!rootNode)	
+    {   prevSqdest = board.currentMove[board.ply - 1].dest;  //to_sq((ss-1)->currentMove); 
+    	  excludedMove = board.excludedMove[board.ply]; 
+    }
+    
     moveCount = captureCount = quietCount = board.moveCount[board.ply] = 0;  //1024
 
 // At non-PV nodes we check for an early TT cutoff   
     // 4. 置换裁剪；
     HashStruct *hsho;
+    hsho = nullptr;
     int ttValue=VALUE_NONE;
     int ttMove = 0;
-    int excludedMove;
-    excludedMove = board.excludedMove[board.ply];
+    
+    
 /* sf10    	
 // Step 4. Transposition table lookup. We don't want the score of a partial
     // search to overwrite a previous full search TT value, so we use a different
@@ -4364,14 +3564,17 @@ int old_alpha = alpha;
 //         	hashhit++;
       return ttValue;
     }
-   } 
-   else //PVNode
-   	hsho = ProbeMove(board); 
+   }    
+   else 	//PVNode
+   	 hsho = ProbeMove(board); 
     
-    if (hsho) 
-    {	 ttMove = get_hmv(hsho->hmvBest);
-       ttValue = value_from_tt(hsho->hVal, board.ply);
-    }	
+   if (rootNode)
+    	ttMove = board.movetab[0].table.move;
+   else
+      if (hsho) 
+      {	 ttMove = get_hmv(hsho->hmvBest);
+         ttValue = value_from_tt(hsho->hVal, board.ply);
+      }	
     
 /* sf10
  // Step 5. Tablebases probe
@@ -4414,11 +3617,11 @@ int old_alpha = alpha;
     
 // Step 6. Static evaluation of the position
     mvBest.move = 0;       	
-    if (incheck)
+    if (incheck || rootNode)  //0101
     {
         board.staticEval[board.ply] = evalscore = VALUE_NONE;
         improving = false;
-    	  goto moves_loop;  // Skip early pruning when in check
+    	  goto moves_loop;  // Skip early pruning when in check //0101 or rootNode
     }	
     else if (hsho)   // else if (ttHit)	
     { // Never assume anything on values stored in TT
@@ -4469,7 +3672,7 @@ int old_alpha = alpha;
    	   {  //if (PvNode)
    	   	  //return quiesCheckPV(board, alpha, beta, 0);
    	   	  //else
-   	      return quiesCheck<NT>(board, alpha, beta, 0, childPv);  //1210
+   	      return quiesCheck<NT>(board, alpha, beta, 0);  //1210
    	   }
    	   
 /* sf10	
@@ -4485,7 +3688,8 @@ improving =   ss->staticEval >= (ss-2)->staticEval
     improving = board.ply < 2
               || board.staticEval[board.ply] >= board.staticEval[board.ply -2]
               || board.staticEval[board.ply -2] == VALUE_NONE;
-    if (   depth < 7 
+    if (  !rootNode
+    	  && depth < 7 
     	  && evalscore - futility_margin(depth, improving) >= beta
         && evalscore < VALUE_KNOWN_WIN) // Do not return unproven wins
         return evalscore;
@@ -4561,8 +3765,8 @@ improving =   ss->staticEval >= (ss-2)->staticEval
 
         // Null move dynamic reduction based on depth and value
         //1213 Depth R = ((823 + 67 * depth / ONE_PLY) / 256 + std::min(int(eval - beta) / 200, 3)) * ONE_PLY;
-        //2019x int R = ((823 + 67 * depth ) / 256 + std::min(int(evalscore - beta) / 258, 3)) ;  //1215 260-270 sf10 /200
-        int R = (3 + depth / 4) + std::min(int(evalscore - beta) / 256, 3);  //1218 	
+        //int R = ((823 + 67 * depth ) / 256 + std::min(int(evalscore - beta) / 258, 3)) ;  //sf10 /200
+        int R = (3 + depth / 4) + std::min(int(evalscore - beta) / 256, 3);  //1214 sf10 /200	
         //  int R = (3 + depth / 4) + (evalscore >= beta + VN);
         // const int nextDepth = depth - R, R = (3 + depth / 4) + (refinedEval >= beta + 167);
         // depth  2  3  4  5  6  7  8  9 10 11 12 13 14 15 16 17 18 19  
@@ -4743,8 +3947,8 @@ improving =   ss->staticEval >= (ss-2)->staticEval
         	ttValue = VALUE_NONE;
         }	       
     }
-//1119 ... template search() to be continued ...
-moves_loop: // When in check, search starts from here
+
+moves_loop: // When in check, search starts from here   //0101 also for rootNode
     MoveTabStruct movetab[64], ncapmovetab[111]; //64]; //capmovetab[111],
     MoveTabStruct badcapmovetab[32];  //1013 - separate badcap
     MoveStruct countermove = counterMoves[board.thd_id][PIECE_IDX(board.piece[prevSqdest])][prevSqdest];  //1017
@@ -4765,41 +3969,37 @@ enum npvphase{HASHPV,CAP,KILLER,CM,NOCAP,BADCAP};
     {
         switch (phase)
         {
-        	case HASHPV:   // 0 hash pv
-        		size=1;
-        		break;
+        	case HASHPV:   // 0 hash pv  //also for rootNode moves
+        	     if (!rootNode)	      		  	
+        		      size=1;
+        	     else size = board.size;	
+        	     break;
 //        	case MATEKILLER:   // 1 mate-killer
 //        		size=1;
-//        		break;
-          
-          case CAP:  // 2 capture
-        {
-            if (incheck)
-            {
-            		size=board.GenChkEvasCap(&movetab[0], incheck);
-          			// no single-reply extension for nonPV
-            }
-            else
-            {
-                size=board.GenCap(&movetab[0], &ncapmovetab[0], ncapsize);
-            }
-             //sort capture
-             //Quicksort(0, size-1, movetab);
-        }
-            break;
+//        		break;  
+          case CAP:  // 2 capture   
+          	   if (!rootNode)      	  	
+                  if (!incheck)
+                     size=board.GenCap(&movetab[0], &ncapmovetab[0], ncapsize); 
+                  else  size=board.GenChkEvasCap(&movetab[0], incheck);
+            	 else	size = 0;     
+               //sort capture
+               //Quicksort(0, size-1, movetab);
+               break;
           case KILLER: //3: //killer
-          	if (incheck)  //evasion
-          		size=0;
-          	else	
-            size=2; //NUM_KILLERS; //3; //4; //2;
+          	if (incheck || rootNode )  //evasion
+          		 size=0;
+          	else size=2; //NUM_KILLERS; //3; //4; //2;
             break;
           case CM: //countermove
-          	if (incheck)  //evasion
+          	if (incheck || rootNode)  //evasion
           		size=0;
-          	else
-            size=1; 
+          	else size=1; 
             break;
           case NOCAP: //4 nocap
+          	if (rootNode)
+        	  	size = 0;
+        	  else	
     if (incheck)
     {
         //size=board.GenChkEvasNCap(&movetab[0], incheck);
@@ -4851,7 +4051,7 @@ enum npvphase{HASHPV,CAP,KILLER,CM,NOCAP,BADCAP};
         		break;
         
          case BADCAP:    //5:	// badcap
-         	if (incheck)  //evasion
+         	if (incheck || rootNode)  //evasion
           		size=0;
           	else
         	 size = badcapsize;  
@@ -4873,12 +4073,17 @@ enum npvphase{HASHPV,CAP,KILLER,CM,NOCAP,BADCAP};
             {
             case HASHPV: 	// 0 hashmove
             {
+            	  if (rootNode)
+            	     tempmove.table.move = board.movetab[i].table.move;  //0101 rootmove
+            	  else
+            	  {	   
                 tempmove.table.move=ttMove;
                 if (tempmove.table.move==0
                     || board.LegalKiller(tempmove.table)==0
                    )
                     continue;
                     //NPVhashhit++;
+                }    
             }
             break;            
 //            case MATEKILLER: 	// 1 matekiller
@@ -4982,6 +4187,7 @@ enum npvphase{HASHPV,CAP,KILLER,CM,NOCAP,BADCAP};
 						
            } // end switch
 
+            if (!rootNode)
             if (tempmove.table.move == excludedMove)  //1109
                continue;
             //ss->moveCount = ++moveCount;   
@@ -5028,8 +4234,7 @@ enum npvphase{HASHPV,CAP,KILLER,CM,NOCAP,BADCAP};
             //1109 implement sf10 Singular extension search 
       if (    depth >= 8 
           &&  tempmove.table.move == ttMove
-//          && !rootNode   //const bool rootNode = PvNode && ss->ply == 0; //1109
-//          && board.ply != 0 //1109 NPV 
+          && !rootNode   //const bool rootNode = PvNode && ss->ply == 0; //1109
           && !excludedMove // Recursive singular search is not allowed
           &&  ttValue != VALUE_NONE
 //          && (tte->bound() & BOUND_LOWER)
@@ -5115,6 +4320,7 @@ if (phase==NOCAP) //4) 	// noncap + badcap
               //&& depth>= HistoryDepth //2 //3
         && incheck == 0
         //&& node_type != NodePV
+        && board.ply>1   //1231  !rootNode
         && newdepth < depth
         && board.piece[tempmove.dest]==0
         && piecefrom < B_KING
@@ -5190,8 +4396,8 @@ if (phase==NOCAP) //4) 	// noncap + badcap
 #endif   // end ifdef HISCUT
 
 // Step 14. Pruning at shallow depth (~170 Elo)
-      if (  // !rootNode
-            board.non_pawn_material(board.m_side) 
+      if (  !rootNode
+            && board.non_pawn_material(board.m_side) 
             && best > VALUE_MATED_IN_MAX_PLY
          )
       {
@@ -5280,7 +4486,7 @@ if (phase==NOCAP) //4) 	// noncap + badcap
 
 
         int reduced=0;
-if (phase==NOCAP) //4) 
+if (phase==NOCAP || rootNode) //4)   //0101 hist prun for rootNode
 {
 #ifdef HISTPRUN
 		if (depth>= HistoryDepth && !incheck && newdepth < depth && gen_count >= 3 //3 //HistoryMoveNb
@@ -5417,7 +4623,8 @@ if (phase==NOCAP) //4)
 			// For PV nodes only, do a full PV search on the first move or after a fail
       // high (in the latter case search only if value < beta), otherwise let the
       // parent node fail low with value <= alpha and try another move.
-      if (PvNode && (moveCount == 1 || (val > alpha && (val < beta))))
+      //1231 if (PvNode && (moveCount == 1 || (val > alpha && (val < beta))))
+       if (PvNode && (moveCount == 1 || (val > alpha && (rootNode || val < beta))))	 //1231	
       {
          // (ss+1)->pv = pv;
          // (ss+1)->pv[0] = MOVE_NONE;
@@ -5427,10 +4634,30 @@ if (phase==NOCAP) //4)
 
         board.unmakemove();
 
-        if (board.m_timeout) //stop
-        	return UNKNOWN_VALUE;
-
       // Step 19. Check for a new best move
+      // Finished searching the move. If a stop occurred, the return value of
+      // the search cannot be trusted, and we return immediately without
+      // updating best move, PV and TT.
+      //sf10 if (Threads.stop.load(std::memory_order_relaxed))
+      //sf10    return VALUE_ZERO;
+      if (board.m_timeout) //stop
+        	return UNKNOWN_VALUE;
+      
+      if (rootNode)   
+      {  
+         	 	  if (moveCount == 1 || val > alpha)  // PV move or new best move? //1228
+              {  board.movetab[i].tabval = val;
+              	 pv[0] = tempmove.table.move;  //1210
+                     //1224 memcpy(pv+1, childPv, (MAX_PLY - 1) * sizeof(move_t));  //1210 may use memcpy for bug-free
+                     memcpy(pv+1, childPv, (MAXDEPTH - board.ply) * sizeof(move_t));  //1224 try short memcpy
+                     //1224 pv[MAX_PLY - 1] = 0; //NULL_MOVE; //1210 to be sure we always end will a sential end-of-list 
+                     pv[MAXDEPTH - 1] = 0; //1224 
+              }	 
+              else 
+              	 board.movetab[i].tabval = -INF; 
+              	  
+                            
+      }
       /*
       if (value > bestValue)
       {   bestValue = value;
@@ -5458,33 +4685,26 @@ if (phase==NOCAP) //4)
         if (val > best)
         {   best = val;
         	  if (val > alpha)
-            {   mvBest.move = tempmove.table.move;                
-                nHashFlag = HASH_PV;
-                if (PvNode && val < beta) // Update alpha! Always alpha < beta //1210
-                {   
-                   alpha = val;
-                   //if (pvNode)          //1210
-                   {
+            {   mvBest.move = tempmove.table.move;     
+            	  if (PvNode && !rootNode) // Update pv even in fail-high case  //0103
+                    //sf10    update_pv(ss->pv, move, (ss+1)->pv);   
+                {
                      pv[0] = mvBest.move;  //1210
-                     memcpy(pv+1, childPv, (MAX_PLY - 1) * sizeof(move_t));  //1210 may use memcpy for bug-free
-                     pv[MAX_PLY - 1] = 0; //NULL_MOVE; //1210 to be sure we always end will a sential end-of-list 
+                     memcpy(pv+1, childPv, (MAXDEPTH - board.ply) * sizeof(move_t));  //1210 may use memcpy for bug-free
+                     pv[MAXDEPTH - 1] = 0; //NULL_MOVE; //1210 to be sure we always end will a sential end-of-list 
 
 //1212                    for (int i = 0; i < MAX_PLY - ply; i++)  //1212 1210
 //1212                        if (!(pv[i + 1] = childPv[i]))       //1212 1210 note: copy done in if = 
 //1212                            break;                           //1212 1210
-                   }
-                }   
+                }                
+                if (PvNode && val < beta) // Update alpha! Always alpha < beta  
+                   alpha = val;
                 else
                 { //   assert(value >= beta); // Fail high
                   //   ss->statScore = 0;
                   goto end_phaseloop; //break;
                 }
             }
-            //if (val >= beta)  //1119 defer to step 20 
-            //{ if (!excludedMove)  //1109
-            //    RecordHash(HASH_BETA, depth, val, tempmove.table.move, board); //, nSingular);
-            //    return val;
-            //}
         }
         
       } // end for i
@@ -5590,7 +4810,7 @@ end_phaseloop:
 
 
 template <int NT>
-int Engine::quiesCheck(Board &board, int alpha, int beta,  int qdepth, move_t pv[])  //1007, int check_depth)
+int Engine::quiesCheck(Board &board, int alpha, int beta,  int qdepth)  //1007, int check_depth)
 {   constexpr bool PvNode = (NT == PV);
     int val, incheck;
     int best, capture, bestmove; //hashflag,  //, kingidx;
@@ -5600,11 +4820,11 @@ int Engine::quiesCheck(Board &board, int alpha, int beta,  int qdepth, move_t pv
     
 //1212    int ply = board.ply; //1212
     // Allocate PV for the child node  //1210
-    move_t childPv[MAX_PLY]; //1212 cannot alloc dynamic[MAX_PLY - ply], alloc [MAX_PLY] instead
+//    move_t childPv[MAX_PLY]; //1212 cannot alloc dynamic[MAX_PLY - ply], alloc [MAX_PLY] instead
     
     // Terminate current PV  //1210
-    if (PvNode)              //1210
-        pv[0] = 0;           //1210
+//    if (PvNode)              //1210
+//        pv[0] = 0;           //1210
         
 //1004    bool givesCheck;
 incheck=board.m_hisrecord[board.m_hisindex-1].htab.Chk;
@@ -5901,11 +5121,11 @@ for (qphase=3; qphase--;)	// 2=hashmove, 1=capture, 0=genchk
         //val = -quiesCheck(-beta, -alpha, qdepth-1, check_depth);
         
         
-        val = -quiesCheck<NT>(board, -beta, -alpha, qdepth-1, childPv);  //1007, check_depth); //1210
+        val = -quiesCheck<NT>(board, -beta, -alpha, qdepth-1);  //1007, check_depth); //1210
         board.unmakemove();
-
-        if (board.m_timeout) //stop
-        	return UNKNOWN_VALUE;
+//0103 since we don't check timeout in QS
+//0103        if (board.m_timeout) //stop
+//0103        	return UNKNOWN_VALUE;
 /* ref sf10 
 // Check for a new best move
       if (value > bestValue)
@@ -5957,16 +5177,7 @@ for (qphase=3; qphase--;)	// 2=hashmove, 1=capture, 0=genchk
               if (PvNode && val < beta) // Update alpha here!
               {	
                  alpha = val;
-                 //if (pvNode)  //1210
-                 {  pv[0] = bestmove;                             //1210
-                 	  
-                     memcpy(pv+1, childPv, (MAX_PLY - 1) * sizeof(move_t));  //1210 may use memcpy for bug-free
-                     pv[MAX_PLY - 1] = 0; //NULL_MOVE; //1210 to be sure we always end will a sential end-of-list 
-
-//1212                    for (int i = 0; i < MAX_PLY - ply; i++) //1210 //1212
-//1212                        if (!(pv[i + 1] = childPv[i]))            //1210 //1212 note: copy done in if = 
-//1212                            break;                                //1210 //1212
-                 }
+                 
               }
               else
                   goto end_qphaseloop; //break; // Fail high   
