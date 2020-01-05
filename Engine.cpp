@@ -2170,7 +2170,7 @@ int Engine::searchRoot()
 //smp    int best; //, size; //, j; //RootAlpha, RootBeta, size, j; //, piecefrom; //j,banned;
 //	int alpha, beta;
  //smp   MoveStruct tempmove;
-    char charmove[5];
+//0105    char charmove[5];
 
 
 		board.Compress_index();
@@ -2857,14 +2857,14 @@ int Engine::Lazy_smp_ID_loop(unsigned int idx, Board* spboard
     //int m_depth; // move to board.h for smp
     int m_depth, alpha, beta, best, newdepth;
     char charmove[5];
-    unsigned long long start_nodes;
+//0105    unsigned long long start_nodes;
     int TimeSpan, nps;
     
     int old_IMaxTime = spboard->IMaxTime;    
     
 //    int pv_tabval;  
 #ifdef PRTBOARD   
-#else
+//0105 #else
 if (mainThread) { 
 //	  print_board(best);
     printf("\nStart of smp_ID_loop:");
