@@ -110,6 +110,7 @@ B32(10000000,11111111,10101010,01010101) = 2164238933
 #define nRank(sq) (sq>>4)
 #define nFile(sq) (sq&15)
 #define his_table(p, sq) (m_his_table[thd_id][p][sq].HistVal)
+#define caphis_table(p, sq) (m_his_table[thd_id][p][sq].CapHistVal)   //0107
 /*
 inline  bool HOMEHALF(int pos, int side)
 {
@@ -791,6 +792,7 @@ struct HistStruct
 		short HistVal;             //1886r
     unsigned short HistHit;
     unsigned short HistTot;
+    short CapHistVal;  //0107 ref sf10
 };
 
 /// Stack struct keeps track of the information we need to remember from nodes

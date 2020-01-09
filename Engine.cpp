@@ -1652,6 +1652,7 @@ void Clear_Hist(void)
 #endif
         //m_his_table[p][i][j].HistVal = 0;
         m_his_table[t][p][(i*16)+j].HistVal = 0;
+        m_his_table[t][p][(i*16)+j].CapHistVal = 0;  //0107
     }
 }
 
@@ -3267,9 +3268,10 @@ inline
 #else  
 __forceinline
 #endif
-static void update_HistVal(HistStruct *hisvptr, int depth, int thd_id)  //1017
+static void update_HistVal(HistStruct *hisvptr, int d, int thd_id)  //1017
 {
-    hisvptr->HistVal += depth * depth; //HistInc[depth]; //
+    hisvptr->HistVal += d * d; //HistInc[depth]; //
+    //0107 hisvptr->HistVal += (d > 17 ? 0 : 29 * d * d + 138 * d - 134);  //0107 sf10 
     if (hisvptr->HistVal >= HistValMax)
     {
 			//for (int i=0; i<(BOARD_SIZE-7); i++)
@@ -3279,9 +3281,42 @@ static void update_HistVal(HistStruct *hisvptr, int depth, int thd_id)  //1017
 			for (int j=0; j<9; j++)
 			{
 				//m_his_table[p][i][j].HistVal /= 2; // (m_his_table[p][i][j].HistVal + 1) / 2;
-        m_his_table[thd_id][p][(i*16)+j].HistVal /= 2;
+        m_his_table[thd_id][p][(i*16)+j].HistVal >>= 1;     //0107   /= 2;
 			}
     }
+}
+
+#ifdef __GNUC__
+inline
+#else  
+__forceinline
+#endif
+static void update_capture_stats(HistStruct *hisvptr, int d, MoveStruct capturesSearched[], int captureCount, Board &board)  //0107)  //1017
+{
+    hisvptr->CapHistVal += d * d; //HistInc[depth]; //
+    if (hisvptr->CapHistVal >= HistValMax)
+    {
+			//for (int i=0; i<(BOARD_SIZE-7); i++)
+			//for (int j=0; j<16; j++)
+			for (int p=0; p<10; p++)
+		  for (int i=0; i<10; i++)
+			for (int j=0; j<9; j++)
+			{
+				//m_his_table[p][i][j].HistVal /= 2; // (m_his_table[p][i][j].HistVal + 1) / 2;
+        m_his_table[board.thd_id][p][(i*16)+j].CapHistVal >>= 1;     //0107   /= 2; 
+			}
+    }
+    
+    // Decrease all the other played capture moves
+     //0107  
+      for (int i = 0; i < captureCount; ++i)
+      {
+          //moved_piece = pos.moved_piece(captures[i]);
+          //captured = type_of(pos.piece_on(to_sq(captures[i])));
+          //captureHistory[moved_piece][to_sq(captures[i])][captured] << -bonus;
+          m_his_table[board.thd_id][PIECE_IDX(board.piece[capturesSearched[i].from])][capturesSearched[i].dest].CapHistVal -= d * d; //0107
+      }
+    
 }
 
 #ifdef __GNUC__
@@ -3312,8 +3347,8 @@ static void update_history(HistStruct *hisvptr, int depth,
 							for (int i=0; i<10; i++)
 							for (int j=0; j<9; j++)
 							{
-								m_his_table[thd_id][p][(i*16)+j].HistHit /= 2; // (m_his_table[p][i][j].HistHit + 1) / 2;
-        				m_his_table[thd_id][p][(i*16)+j].HistTot /= 2; // (m_his_table[p][i][j].HistTot + 1) / 2;
+								m_his_table[thd_id][p][(i*16)+j].HistHit >>= 1;   //0107 /= 2; // (m_his_table[p][i][j].HistHit + 1) / 2;
+        				m_his_table[thd_id][p][(i*16)+j].HistTot >>= 1;   //0107 =/= 2; // (m_his_table[p][i][j].HistTot + 1) / 2;
     					}
   					}
 
@@ -3324,7 +3359,7 @@ static void update_history(HistStruct *hisvptr, int depth,
 		          for (int i=0; i<10; i++)
 			        for (int j=0; j<9; j++)
 			        {
-				        m_his_table[thd_id][p][(i*16)+j].HistVal /= 2; // (m_his_table[p][i][j].HistVal + 1) / 2;
+				        m_his_table[thd_id][p][(i*16)+j].HistVal >>= 1;  //0107 /= 2; // (m_his_table[p][i][j].HistVal + 1) / 2;
 			        }
             }
 
@@ -3369,6 +3404,7 @@ int Engine::search(Board &board, int alpha, int beta, int depth, int null_allow,
     bool improving, givesCheck, doFullDepthSearch, moveCountPruning, skipQuiets; //captureOrPromotion; 
     MoveStruct mvBest;
     MoveTabStruct movesSearched[128];
+    MoveStruct capturesSearched[32]; //0107
     HistStruct *hisvptr;
     //1118 int alpha = beta - 1;
     best = -INF;
@@ -4707,6 +4743,13 @@ if (phase==NOCAP || rootNode) //4)   //0101 hist prun for rootNode
             }
         }
         
+        if (tempmove.table.move != mvBest.move)                             //0107
+        {   if (capture && captureCount < 32)                    //0107 
+              capturesSearched[captureCount++].move = tempmove.table.move;  //0107
+          //else if (!captureOrPromotion && quietCount < 64)
+          //    quietsSearched[quietCount++] = move;
+        }
+        
       } // end for i
     }	// end for phase
 end_phaseloop:
@@ -4761,14 +4804,15 @@ end_phaseloop:
     }
     // 13. 更新置换表、历史表和杀手着法表
     else if (mvBest.move)
-    {                 
+    {    
+    	  hisvptr = &(m_his_table[board.thd_id][PIECE_IDX(board.piece[mvBest.from])][mvBest.dest]);   //0107 also for caphist             
         if (capture==0)  //1016  && node_type==NodePV && !incheck)
         {
         	//1024 update_quiet_stats()  //killers, hist, countermove
 //          if (best >= WIN_VALUE)
 //              g_matekiller[board.ply].move = mvBest.move;
 //          else
-          { 	  
+           	  
             if (g_killer[0][board.ply].move != mvBest.move)
             {
                 g_killer[1][board.ply].move = g_killer[0][board.ply].move;
@@ -4776,13 +4820,15 @@ end_phaseloop:
             }    
               //hisvptr = &(m_his_table[mvBest.dest][PIECE_IDX16(board.piece[mvBest.from])]);
               //hisvptr = &(m_his_table[PIECE_IDX(board.piece[mvBest.from])][nFile(mvBest.dest)][nRank(mvBest.dest)]);
-                hisvptr = &(m_his_table[board.thd_id][PIECE_IDX(board.piece[mvBest.from])][mvBest.dest]);   //1017
-                update_HistVal(hisvptr, depth, board.thd_id);         
-                update_history(hisvptr, depth, movesSearched, noncap_gen_count, board.thd_id);                    
-                if (board.ply >0 && (board.currentMove[board.ply -1].move !=0))
-                   counterMoves[board.thd_id][PIECE_IDX(board.piece[prevSqdest])][prevSqdest].move = mvBest.move;  //1017
-          }
-        }    
+              //0107  hisvptr = &(m_his_table[board.thd_id][PIECE_IDX(board.piece[mvBest.from])][mvBest.dest]);   //1017
+            update_HistVal(hisvptr, depth, board.thd_id);         
+            update_history(hisvptr, depth, movesSearched, noncap_gen_count, board.thd_id);                    
+            if (board.ply >0 && (board.currentMove[board.ply -1].move !=0))
+                counterMoves[board.thd_id][PIECE_IDX(board.piece[prevSqdest])][prevSqdest].move = mvBest.move;  //1017
+          
+        } 
+        else //0107 update capture hist   
+        	update_capture_stats(hisvptr, depth, capturesSearched, captureCount, board);  //0107
     }
     
     //1119 else if (best <= old_alpha)
