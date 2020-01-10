@@ -603,7 +603,7 @@ int popcnt( unsigned int x )
 static const int c_piece_idx[34] = {10,10,0,1,0,1,0,1,0,1,0,1,2,3,2,3,2,3,2,3,4,5,4,5,6,7,6,7,8,9,8,9,0,1};
 //macros
 #define ADJ9_16(x) ((x / 9) * 16 + (x % 9))
-#define PIECE_VALU(x) ((x*64))
+#define PIECE_VALU(x) ((x<<10))  //0109 x*64
 //#define PIECE_VALU(x) (PIECE_VALUE[x])
 #define PIECE_IDX16(x) (((x&29)+(x&1))>>1)
 #define PIECE_IDX(x) (c_piece_idx[x])
@@ -912,7 +912,7 @@ public:
     int  GenChkEvasNCap(MoveTabStruct *movetab, int incheck);	//1=rook/c/p only, 2=horse only, 3=both
     //int  Gen(MoveTabStruct movetab[]); //, short pv);
 //template<int t_side>
-    int  GenCap(MoveTabStruct *movetab, MoveTabStruct *ncapmovetab, long &ncapsize );
+    int  GenCap(MoveTabStruct *movetab, MoveTabStruct *ncapmovetab, int &ncapsize );
 //    int  GenCapQS(MoveTabStruct *movetab, MoveTabStruct *ncapmovetab, int &ncap );
 template<int q_side>
     int  GenCapQS(MoveTabStruct *movetab);

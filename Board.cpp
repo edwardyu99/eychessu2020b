@@ -2211,7 +2211,7 @@ void Board::UnMove (int from,int dest,int capture)
 bool Board::LegalMove (unsigned short Imove)
 {
     int i,size;
-	long ncapsize;
+	int ncapsize;
     MoveTabStruct movetab[96], ncapmovetab[64];
 
     size=GenCap(&movetab[0], &ncapmovetab[0], ncapsize);
@@ -2302,7 +2302,7 @@ extern int PIECE_VALUE_side[46];   //1002 from engine.cpp - chg abs to all +ve
 
 #define t_side (m_side)
 //template<int t_side>
-int  Board::GenCap(MoveTabStruct *movetab, MoveTabStruct *ncapmovetab, long &ncap)
+int  Board::GenCap(MoveTabStruct *movetab, MoveTabStruct *ncapmovetab, int &ncap)
 {
     int nMove=0;
     int DstSq, piecedest; //,xx; //val, k; //,j; //,piecedest_2;
@@ -2338,7 +2338,7 @@ int  Board::GenCap(MoveTabStruct *movetab, MoveTabStruct *ncapmovetab, long &nca
                 else if ( (piecedest&1) !=t_side)  // color not same side
                     {
                       movetab[nMove].tabentry = (SrcSq <<8) + DstSq;
-                      movetab[nMove].tabval = PIECE_VALU(piecedest) - PAWN + caphis_table(PIECE_IDX(bb), DstSq); //0107 HistValMax;
+                      movetab[nMove].tabval = PIECE_VALU(piecedest) + caphis_table(PIECE_IDX(bb), DstSq); //0109 - PAWN //0107 HistValMax;
                       nMove++;
 		    						}
 
@@ -2374,7 +2374,7 @@ int  Board::GenCap(MoveTabStruct *movetab, MoveTabStruct *ncapmovetab, long &nca
                 else if ( (piecedest&1) != t_side )  // color not same side
                 {
                     movetab[nMove].tabentry = (SrcSq <<8) + DstSq;
-                    movetab[nMove].tabval = PIECE_VALU(piecedest) - ADVISOR+ caphis_table(PIECE_IDX(bb), DstSq); //0107 HistValMax;
+                    movetab[nMove].tabval = PIECE_VALU(piecedest) + caphis_table(PIECE_IDX(bb), DstSq); //0109 - ADVISOR//0107 HistValMax;
                     nMove++;
                 }
                 DstPtr ++; //--;
@@ -2412,7 +2412,7 @@ int  Board::GenCap(MoveTabStruct *movetab, MoveTabStruct *ncapmovetab, long &nca
                    	//if ( piece[(SrcSq+DstSq) >>1]==0)
                     {
                           movetab[nMove].tabentry = (SrcSq <<8) + DstSq;
-                      movetab[nMove].tabval = PIECE_VALU(piecedest) - ELEPHAN+ caphis_table(PIECE_IDX(bb), DstSq); //0107 HistValMax;
+                      movetab[nMove].tabval = PIECE_VALU(piecedest) + caphis_table(PIECE_IDX(bb), DstSq); //0109 - ELEPHAN HistValMax;
                       nMove++;
                     }
                 }
@@ -2453,7 +2453,7 @@ for (int bb=hors_index[t_side]; bb>=20;  bb-=2)
 									//if (piece[*EyeLegPtr]==0)
 									{
                     movetab[nMove].tabentry = (SrcSq <<8) + DstSq;
-                      movetab[nMove].tabval = PIECE_VALU(piecedest) - HORSE+ caphis_table(PIECE_IDX(bb), DstSq); //0107 HistValMax;
+                      movetab[nMove].tabval = PIECE_VALU(piecedest) + caphis_table(PIECE_IDX(bb), DstSq); //0109 - HORSE HistValMax;
                       nMove++;
                   }
                 }
@@ -2497,7 +2497,7 @@ for (int bb=rook_index[t_side]; bb>=24; bb-=2)
                     if ( (piece[DstSq]&1) != t_side)
                     {
                       movetab[nMove].tabentry = (SrcSq <<8) + DstSq;
-                      movetab[nMove].tabval = PIECE_VALU(piece[DstSq]) - bb+ caphis_table(PIECE_IDX(bb), DstSq); //0107 HistValMax;
+                      movetab[nMove].tabval = PIECE_VALU(piece[DstSq]) + caphis_table(PIECE_IDX(bb), DstSq); //0109 - bb HistValMax;
                       nMove++;
                     }
                 }
@@ -2509,7 +2509,7 @@ for (int bb=rook_index[t_side]; bb>=24; bb-=2)
                     if ( (piece[DstSq]&1) != t_side)
                     {
                       movetab[nMove].tabentry = (SrcSq <<8) + DstSq;
-                      movetab[nMove].tabval = PIECE_VALU(piece[DstSq]) - bb+ caphis_table(PIECE_IDX(bb), DstSq); //0107 HistValMax;
+                      movetab[nMove].tabval = PIECE_VALU(piece[DstSq]) + caphis_table(PIECE_IDX(bb), DstSq); //0109 - bb HistValMax;
                       nMove++;
                     }
                 }
@@ -2547,7 +2547,7 @@ for (int bb=rook_index[t_side]; bb>=24; bb-=2)
             else if (  (piecedest&1) != t_side)  // color not same side
             {
                 movetab[nMove].tabentry = (SrcSq <<8) + DstSq;
-                movetab[nMove].tabval = PIECE_VALU(piecedest) - 32+ caphis_table(PIECE_IDX(bb), DstSq); //0107 HistValMax;
+                movetab[nMove].tabval = PIECE_VALU(piecedest) + caphis_table(PIECE_IDX(bb), DstSq); //0109 -32 HistValMax;
                 nMove++;
             }
             DstPtr --; //++;
@@ -2567,6 +2567,7 @@ int  Board::GenCapQS(MoveTabStruct *movetab)
     unsigned char *DstPtr, *EyeLegPtr;
     //SlideMoveStruct *lpsmv;
 	//ncap=0;
+
 
 // PAWN
     //for (int bb=10+m_side; bb>=2; bb-=2)
@@ -2591,7 +2592,7 @@ int  Board::GenCapQS(MoveTabStruct *movetab)
                 else if ( (piecedest&1) !=q_side)  // color not same side
                     {
                       movetab[nMove].tabentry = (SrcSq <<8) + DstSq;
-                      movetab[nMove].tabval = PIECE_VALU(piecedest) - PAWN;
+                      movetab[nMove].tabval = PIECE_VALU(piecedest) + caphis_table(PIECE_IDX(bb), DstSq); //0109 - PAWN;
                       nMove++;
 		    						}
                 DstPtr ++;
@@ -2621,7 +2622,7 @@ int  Board::GenCapQS(MoveTabStruct *movetab)
                 else if ( (piecedest&1) != q_side )  // color not same side
                 {
                     movetab[nMove].tabentry = (SrcSq <<8) + DstSq;
-                      movetab[nMove].tabval = PIECE_VALU(piecedest) - ADVISOR;
+                      movetab[nMove].tabval = PIECE_VALU(piecedest) + caphis_table(PIECE_IDX(bb), DstSq); //0109 - ADVISOR;
                       nMove++;
                 }
                 DstPtr ++; //--; //++;
@@ -2655,7 +2656,7 @@ int  Board::GenCapQS(MoveTabStruct *movetab)
                    	//if ( piece[(SrcSq+DstSq) >>1]==0)
                     {
                           movetab[nMove].tabentry = (SrcSq <<8) + DstSq;
-                      movetab[nMove].tabval = PIECE_VALU(piecedest) - ELEPHAN;
+                      movetab[nMove].tabval = PIECE_VALU(piecedest) + caphis_table(PIECE_IDX(bb), DstSq); //0109 - ELEPHAN;
                       nMove++;
                     }
                 }
@@ -2692,7 +2693,7 @@ for (int bb=hors_index[q_side]; bb>=20;  bb-=2)
 									//if (piece[*EyeLegPtr]==0)
 									{
                     movetab[nMove].tabentry = (SrcSq <<8) + DstSq;
-                      movetab[nMove].tabval = PIECE_VALU(piecedest) - HORSE;
+                      movetab[nMove].tabval = PIECE_VALU(piecedest) + caphis_table(PIECE_IDX(bb), DstSq); //0109 - HORSE;
                       nMove++;
                   }
                 }
@@ -2733,7 +2734,7 @@ for (int bb=rook_index[q_side]; bb>=24; bb-=2)
                     if ( (piece[DstSq]&1) != q_side)
                     {
                       movetab[nMove].tabentry = (SrcSq <<8) + DstSq;
-                      movetab[nMove].tabval = PIECE_VALU(piece[DstSq]) - bb; //CANNON;
+                      movetab[nMove].tabval = PIECE_VALU(piece[DstSq]) + caphis_table(PIECE_IDX(bb), DstSq); //0109 - bb; //CANNON;
                       nMove++;
                     }
                 }
@@ -2745,7 +2746,7 @@ for (int bb=rook_index[q_side]; bb>=24; bb-=2)
                     if ( (piece[DstSq]&1) != q_side)
                     {
                       movetab[nMove].tabentry = (SrcSq <<8) + DstSq;
-                      movetab[nMove].tabval = PIECE_VALU(piece[DstSq]) - bb; //CANNON;
+                      movetab[nMove].tabval = PIECE_VALU(piece[DstSq]) + caphis_table(PIECE_IDX(bb), DstSq); //0109 - bb; //CANNON;
                       nMove++;
                     }
                 }
@@ -2762,8 +2763,8 @@ for (int bb=rook_index[q_side]; bb>=24; bb-=2)
 
 // KING
     //if (NOTSQEMPTY(boardsq[32+m_side]))
-    {
-        int SrcSq = boardsq[32+q_side];
+    {   int bb = 32-q_side;
+        int SrcSq = boardsq[bb];
         DstPtr = g_PawnMoves[SrcSq][q_side] +3;
         DstSq = *DstPtr;
         while (DstSq !=0) //!= 0)
@@ -2777,7 +2778,7 @@ for (int bb=rook_index[q_side]; bb>=24; bb-=2)
             else if (  (piecedest&1) != q_side)  // color not same side
             {
                 movetab[nMove].tabentry = (SrcSq <<8) + DstSq;
-                movetab[nMove].tabval = PIECE_VALU(piecedest) - 32; //KING;
+                movetab[nMove].tabval = PIECE_VALU(piecedest) + caphis_table(PIECE_IDX(bb), DstSq); //0109 - 32; //KING;
                 nMove++;
             }
             DstPtr --; //++;
@@ -2807,7 +2808,7 @@ static const unsigned short shiftFile[BOARD_SIZE-7]={0x8000, 0x4000, 0x2000, 0x1
 int Board::GenChkEvasCap(MoveTabStruct *movetab, int chkidx) //, MoveTabStruct *ncapmovetab, int *ncapsize )
 {
     int nMove=0;
-    int DstSq, wchkidx, x, y, nDisp; //piecedest; //, xx;
+    int DstSq, wchkidx, x, y, nDisp, pieceidx; //piecedest; //, xx;
     unsigned char *DstPtr, *EyeLegPtr;
 
     //MoveTabStruct *tabptr; //, *ncaptabptr;
@@ -2817,6 +2818,36 @@ int Board::GenChkEvasCap(MoveTabStruct *movetab, int chkidx) //, MoveTabStruct *
     int kingpos = boardsq[32+m_side];
     int kingidx=kingindex[kingpos];
 		wchkidx = (chkidx &15) - 1;
+//KING   incl noncap
+    //if (SrcSq >=0 )
+    {   pieceidx = PIECE_IDX(32 + m_side);
+        //DstPtr4 = g_KingMoves[SrcSq];
+        DstPtr = g_PawnMoves[kingpos][m_side] +3;
+        DstSq = *DstPtr;
+        while (DstSq !=0) //!= 0)
+        {	//DstSq--;
+            //piecedest = piece[DstSq];
+            if (piece[DstSq]==0 || ( ((piece[DstSq]&1) !=m_side)) ) // empty or color not same side
+            {   movetab[nMove].tabentry = (kingpos <<8) + DstSq;
+								//if (MoveInChk(kingpos, DstSq, piecedest) ==0)
+								if (piece[DstSq]==0)
+								{
+                            movetab[nMove].tabval = his_table(pieceidx, DstSq) - HistValMax; //0109
+                            nMove++;
+                }	
+                else      
+               	{
+                   movetab[nMove].tabval = -32; //0109 + HistValMax;  //1019 cap evasion bef ncap; //-KING;
+                   nMove++;
+							  }
+              
+            }
+            DstPtr --; //++;
+            DstSq = *DstPtr;
+        }
+    }
+
+
 
 	//for (bb=2+m_side; bb>=0; bb-=2)
 
@@ -2831,6 +2862,7 @@ int Board::GenChkEvasCap(MoveTabStruct *movetab, int chkidx) //, MoveTabStruct *
         if (NOTSQEMPTY(boardsq[bb]))
         {
             int SrcSq = boardsq[bb];
+            pieceidx = PIECE_IDX(bb);
             //DstPtr = g_advelemoves[SrcSq] +3;
             DstPtr = g_KnightMoves[SrcSq] + 9;
             DstSq = *DstPtr;
@@ -2847,17 +2879,18 @@ int Board::GenChkEvasCap(MoveTabStruct *movetab, int chkidx) //, MoveTabStruct *
                     	(kingevas[wchkidx][kingidx][nRank(DstSq)] & (shiftFile[DstSq]))
                     || (kingevas[wchkidx][kingidx][nRank(SrcSq)] & (shiftFile[SrcSq]))
                     )
-                    {
-                    	//if (MoveInChk(SrcSq, DstSq, piecedest) ==0)
+                    { movetab[nMove].tabentry = (SrcSq <<8) + DstSq;
+                    	
+                    	if ( piecedest==0)
                     	{
-
-                        //TABMOVE(SrcSq, DstSq);
-                        //tabptr->tabval = (piecedest) - ADVISOR;
-                        //tabptr++;
-                        movetab[nMove].tabentry = (SrcSq <<8) + DstSq;
-                            movetab[nMove].tabval = (piecedest) - ADVISOR + HistValMax;  //1019 cap evasion bef ncap
+                            movetab[nMove].tabval = his_table(pieceidx, DstSq) - HistValMax; //0109
                             nMove++;
                       }
+                      else
+                      {
+                            movetab[nMove].tabval = (piecedest) - ADVISOR; //0109 + HistValMax;  //1019 cap evasion bef ncap
+                            nMove++;
+                      }	
                     }
                 }
                 DstPtr ++; //--; //++;
@@ -2877,6 +2910,7 @@ for (int bb=elep_index[m_side]; bb>=16;  bb-=2)
         if (NOTSQEMPTY(boardsq[bb]))
         {
             int SrcSq = boardsq[bb];
+            pieceidx = PIECE_IDX(bb);
             //DstPtr = g_advelemoves[SrcSq];
             DstPtr = g_KnightMoves[SrcSq] + 9;
             DstSq = *DstPtr;
@@ -2901,7 +2935,7 @@ for (int bb=elep_index[m_side]; bb>=16;  bb-=2)
                         //tabptr->tabval = (piecedest) - ELEPHAN;
                         //tabptr++;
                         movetab[nMove].tabentry = (SrcSq <<8) + DstSq;
-                            movetab[nMove].tabval = (piecedest) - ELEPHAN + HistValMax;  //1019 cap evasion bef ncap;
+                            movetab[nMove].tabval = (piecedest) - ELEPHAN; //0109 + HistValMax;  //1019 cap evasion bef ncap;
                             nMove++;
                       }
                     }
@@ -2949,7 +2983,7 @@ for (int bb=hors_index[m_side];  bb>=20; bb-=2)
                             //tabptr->tabval = -HORSE;
                             //tabptr++;
                             movetab[nMove].tabentry = (SrcSq <<8) + DstSq;
-                            movetab[nMove].tabval = -HORSE + HistValMax;  //1019 cap evasion bef ncap;
+                            movetab[nMove].tabval = -HORSE; //0109 + HistValMax;  //1019 cap evasion bef ncap;
                             nMove++;
                           }
                         }
@@ -2997,7 +3031,7 @@ for (int bb=rook_index[m_side]; bb>=24; bb-=2)
                         || (kingevas[wchkidx][kingidx][y] & (shiftx[x])) )
                     	{
                             movetab[nMove].tabentry = (SrcSq <<8) + DstSq;
-                            movetab[nMove].tabval = -bb + HistValMax;  //1019 cap evasion bef ncap; //-CANNON;
+                            movetab[nMove].tabval = -bb; //0109 + HistValMax;  //1019 cap evasion bef ncap; //-CANNON;
                             nMove++;
                       }
                   }
@@ -3013,7 +3047,7 @@ for (int bb=rook_index[m_side]; bb>=24; bb-=2)
                         || (kingevas[wchkidx][kingidx][y] & (shiftx[x])) )
                     	{
                             movetab[nMove].tabentry = (SrcSq <<8) + DstSq;
-                            movetab[nMove].tabval = -bb + HistValMax;  //1019 cap evasion bef ncap; //-CANNON;
+                            movetab[nMove].tabval = -bb; //0109 + HistValMax;  //1019 cap evasion bef ncap; //-CANNON;
                             nMove++;
                       }
                   }
@@ -3087,35 +3121,6 @@ for (int bb=rook_index[m_side];  bb>=28; bb-=2)
     */
 } // end if chkidx
 
-//KING   incl noncap
-
-    //if (SrcSq >=0 )
-    {
-        //DstPtr4 = g_KingMoves[SrcSq];
-        DstPtr = g_PawnMoves[kingpos][m_side] +3;
-        DstSq = *DstPtr;
-        while (DstSq !=0) //!= 0)
-        {	//DstSq--;
-            //piecedest = piece[DstSq];
-            if (piece[DstSq]==0 || ( ((piece[DstSq]&1) !=m_side)) ) // empty or color not same side
-            {
-								//if (MoveInChk(kingpos, DstSq, piecedest) ==0)
-               	{
-
-                //TABMOVE(kingpos, DstSq);
-                //tabptr->tabval = -KING; //(piecedest) - KING;
-                //tabptr++;
-                movetab[nMove].tabentry = (kingpos <<8) + DstSq;
-                movetab[nMove].tabval = -32 + HistValMax;  //1019 cap evasion bef ncap; //-KING;
-                nMove++;
-							}
-
-            }
-            DstPtr --; //++;
-            DstSq = *DstPtr;
-        }
-    }
-
 
 
 
@@ -3181,7 +3186,7 @@ for (int bb=rook_index[m_side];  bb>=24; bb-=2)
                   {
                   	movetab[nMove].tabentry = (SrcSq <<8) + DstSq;
                     //movetab[nMove].tabval = (m_his_table[DstSq][PIECE_IDX16(bb)].HistVal);
-                    movetab[nMove].tabval = his_table(pieceidx, DstSq);
+                    movetab[nMove].tabval = his_table(pieceidx, DstSq) - HistValMax; //0109
                     nMove++;
                   }
         					DstSq += nStep;
@@ -3198,7 +3203,7 @@ for (int bb=rook_index[m_side];  bb>=24; bb-=2)
                   {
                   	movetab[nMove].tabentry = (SrcSq <<8) + DstSq;
                     //movetab[nMove].tabval = (m_his_table[DstSq][PIECE_IDX16(bb)].HistVal);
-                    movetab[nMove].tabval = his_table(pieceidx, DstSq);
+                    movetab[nMove].tabval = his_table(pieceidx, DstSq)- HistValMax; //0109;
                     nMove++;
                   }
         					DstSq -= nStep;
@@ -3251,7 +3256,7 @@ for (int bb=hors_index[m_side];  bb>=20; bb-=2)
 
                         movetab[nMove].tabentry = (SrcSq <<8) + DstSq;
                         //movetab[nMove].tabval = (m_his_table[DstSq][PIECE_IDX16(bb)].HistVal);
-                        movetab[nMove].tabval = his_table(pieceidx, DstSq);
+                        movetab[nMove].tabval = his_table(pieceidx, DstSq)- HistValMax; //0109;
                         nMove++;
                           }
                         }
@@ -3295,7 +3300,7 @@ for (int bb=hors_index[m_side];  bb>=20; bb-=2)
 
                         movetab[nMove].tabentry = (SrcSq <<8) + DstSq;
                         //movetab[nMove].tabval = (m_his_table[DstSq][PIECE_IDX16(bb)].HistVal);
-                        movetab[nMove].tabval = his_table(pieceidx, DstSq);
+                        movetab[nMove].tabval = his_table(pieceidx, DstSq)- HistValMax; //0109;
                         nMove++;
                     }
                 }

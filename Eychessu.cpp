@@ -8,7 +8,7 @@
 // 1. 控制台应用程序的入口点                                                                              //
 // 2. 通过ucci协议与界面程序之间进行通讯    
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// 
+// 20200107 - 2020a add caphistval
 // 20200102 - 2020a fix root_pv  
 // 20191218 - 2019y add to github   
 // 20191214 - 2019x use sf10 null search  
@@ -397,8 +397,8 @@ fflush(stdout);
 
 char inifile[120];
 LocatePath(inifile, "EYCHESSU.INI");  
-mf = GetPrivateProfileInt("param","mf",4,inifile);  //clop bottom cann eval //1108
-mf2 = GetPrivateProfileInt("param","mf2",8,inifile);  //clop bottom cann eval  
+mf = GetPrivateProfileInt("param","mf",18,inifile);  //clop=18 asp delta bottom sf10=20 
+mf2 = GetPrivateProfileInt("param","mf2",3,inifile);  //clop=3 m_depth >=5 sf10=5  
 //mf3 = GetPrivateProfileInt("param","mf3",16,inifile); //clop bottom cann eval 
 //printf("*** parm1=%d\n", mf); 
 //printf("*** parm1=%d, parm2=%d\n", mf, mf2); 

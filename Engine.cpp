@@ -13,8 +13,8 @@
 #undef PERFT
 //#define DEBUG
 #undef DEBUG
-//#define PRTBOARD
-#undef PRTBOARD
+#define PRTBOARD
+//#undef PRTBOARD
 #undef PRINTEVA
 #define HISTPRUN
 //#undef HISTPRUN
@@ -2616,7 +2616,8 @@ return 0;
     //int  tabval[111];
     //MoveTabStruct movetab[111];  //smp
     MoveTabStruct ncapmovetab[64];
-    long ncapsize; //=0;
+    int ncapsize; //=0;
+    int badcapsize; 
     //int max_root_nodes;
     board.nBanMoves = 0; 
     if (board.incheck)
@@ -2646,15 +2647,18 @@ return 0;
 
         //size=(board.m_side ? board.GenCap<1>(&movetab[0], &ncapmovetab[0], ncapsize)
         //: board.GenCap<0>(&movetab[0], &ncapmovetab[0], ncapsize));
-        board.size=board.GenCap(&board.movetab[0], &ncapmovetab[0], ncapsize);
-    
-        memcpy(&board.movetab[board.size], &ncapmovetab[0], ncapsize * 4);
-        board.size += ncapsize;
+        board.size=board.GenCap(&board.movetab[0], &ncapmovetab[0], badcapsize);  //0109 ncapsize
+        //0109 append badcap after noncap
+        //0109 memcpy(&board.movetab[board.size], &ncapmovetab[0], ncapsize * 4);
+        //0109 board.size += ncapsize;
 
 //        size=board.GenCapQS(&movetab[0]);
         ncapsize=board.GenNonCap(&board.movetab[board.size], 0);
         board.size += ncapsize;
 
+         //0109 append badcap after noncap
+        memcpy(&board.movetab[board.size], &ncapmovetab[0], badcapsize * 4);
+        board.size += badcapsize;
         //ncapsize=board.GenNonCapPBEK(&movetab[size]);
         //size += ncapsize;
 
@@ -2706,7 +2710,7 @@ return 0;
                 else
                 {
                     board.movetab[i].tabval = -quiesCheck<PV>(board, -INF, INF, 0); //1210  
-                    //board.movetab[i].tabval = -Evalscore(board); //1210                                        
+                                                          
                     board.unmakemove();                    
                     if (board.movetab[i].tabval > best)
                     {
@@ -2726,7 +2730,9 @@ return 0;
     } //end for (i=
 
     std::sort(board.movetab, board.movetab + board.size);
+    board.size = board.size - board.nBanMoves;   //remove banmoves and illegal   	
     board.m_bestmove = board.movetab[0].table.move;
+    best = board.movetab[0].tabval;  //0109
 #ifdef PRTBOARD    
     com2char(charmove, board.movetab[0].table.from, board.movetab[0].table.dest );
     printf("info depth 0 score %d pv %s\n", best, charmove);	        
@@ -2752,7 +2758,7 @@ return 0;
     fflush(stdout);
 
 #endif   
-    board.size = board.size - board.nBanMoves;   //remove banmoves and illegal      
+       
     
     board.m_nodes=0;
     board.root_depth=1;  //init for lazy smp 
@@ -2864,11 +2870,30 @@ int Engine::Lazy_smp_ID_loop(unsigned int idx, Board* spboard
     int old_IMaxTime = spboard->IMaxTime;    
     
 //    int pv_tabval;  
+
+    
+int delta = 18; //mf;  //0109 19; //asp_window
+int lastbest = spboard->movetab[0].tabval;   //1231 init to first root tabval //INF;
+    //Iterative deepening at searchroot
+    //for(depth=start_depth; depth<IMaxDepth; ++depth) //depth=1 has been qsearch??
+
+//lazy smp - limit to IMAXDepth to 3 if IMaxTime < 10 
+//    if (board.IMaxTime < 10) IMaxDepth = 3;
+//    printf("     **thd %d IMaxDepth=%d\n", idx, IMaxDepth);
+//    fflush(stdout);	 
+    best = delta = alpha = -INF;    //sf10 //1231 init bef m_depth loop
+    beta = INF;	  
+//0103    move_t prev_root_pv[MAX_PLY+1];  //0102
+    move_t root_pv[MAX_PLY+1]; //1210 MAX_PLY=256 //smp, now local in thd 
+    memset(root_pv, 0, sizeof(root_pv));  //1210                    
+    for (m_depth=1; m_depth<IMaxDepth; ++m_depth) //depth=1 has been qsearch??
+    {
 #ifdef PRTBOARD   
-//0105 #else
+//#else
 if (mainThread) { 
 //	  print_board(best);
-    printf("\nStart of smp_ID_loop:");
+    printf("\nStart of smp_ID_loop:-");
+    printf(" m_depth=%d, lastbest=%d, delta=%d, alpha=%d, beta=%d, best=%d", m_depth, lastbest, delta, alpha, beta, best);
     printf("\nRoot moves: ");
     for (int i=0; i<spboard->size; i++)
     {
@@ -2888,24 +2913,8 @@ if (mainThread) {
     printf("\n"); 
     fflush(stdout);
 } //mainThread 
-#endif        
-    
-int delta = 19; //asp_window
-int lastbest = spboard->movetab[0].tabval;   //1231 init to first root tabval //INF;
-    //Iterative deepening at searchroot
-    //for(depth=start_depth; depth<IMaxDepth; ++depth) //depth=1 has been qsearch??
-
-//lazy smp - limit to IMAXDepth to 3 if IMaxTime < 10 
-//    if (board.IMaxTime < 10) IMaxDepth = 3;
-//    printf("     **thd %d IMaxDepth=%d\n", idx, IMaxDepth);
-//    fflush(stdout);	 
-    best = delta = alpha = -INF;    //sf10 //1231 init bef m_depth loop
-    beta = INF;	  
-//0103    move_t prev_root_pv[MAX_PLY+1];  //0102
-    move_t root_pv[MAX_PLY+1]; //1210 MAX_PLY=256 //smp, now local in thd 
-    memset(root_pv, 0, sizeof(root_pv));  //1210                    
-    for (m_depth=1; m_depth<IMaxDepth; ++m_depth) //depth=1 has been qsearch??
-    {
+#endif            	
+    	
 //0103       memcpy(prev_root_pv, root_pv, sizeof(root_pv));  //0102
 
     	    // Sizes and phases of the skip-blocks, used for distributing search depths across the threads
@@ -2955,10 +2964,10 @@ int lastbest = spboard->movetab[0].tabval;   //1231 init to first root tabval //
       //sf10 for (RootMove& rm : rootMoves)
       //sf10    rm.previousScore = rm.score; 
         
-      if (m_depth >=5) //stcokfish-7 sf10 use asspwin for depth >=5
+      if (m_depth >= 3) //mf2) //0109 5) //stcokfish-7 sf10 use asspwin for depth >=5
 	    {			
         //1231 if (abs(lastbest) < WIN_VALUE)
-            delta = 19;       
+            delta = 18; //mf; //0109 19;       
             alpha = std::max(lastbest - delta, -INF);
             beta  = std::min(lastbest + delta,  INF);
     	}
@@ -2968,7 +2977,9 @@ int lastbest = spboard->movetab[0].tabval;   //1231 init to first root tabval //
             	int faillow_cnt = 0;
             	int failedHighCnt = 0;
             	while (true) 
-              {                      	
+              {      
+              	
+              	                	
 /* sf10       Depth adjustedDepth = std::max(ONE_PLY, rootDepth - failedHighCnt * ONE_PLY);
               bestValue = ::search<PV>(rootPos, ss, alpha, beta, adjustedDepth, false);
               // Bring the best move to the front. It is critical that sorting
@@ -3107,30 +3118,7 @@ else
             	if (m_depth >= 6) //4 6
             	  break; 	  
 
-#ifdef PRTBOARD   
-if (mainThread) { 
-	  
-    printf("\nEnd of depth: m_depth=%d, lastbest=%d, delta=%d, alpha=%d, beta=%d, best=%d", m_depth, lastbest, delta, alpha, beta, best);
-    printf("\nRoot moves: ");
-    for (int i=0; i<spboard->size; i++)
-    {
-        com2char(charmove, spboard->movetab[i].table.from, spboard->movetab[i].table.dest );
-        //fprintf(traceout, " %s", charmove);
-        printf("  %s", charmove);
-    }    
-    printf("\n");
-    fflush(stdout);
-    
-    printf("Root tbval: ");
-    for (int i=0; i<spboard->size; i++)
-    {
-        printf("%6d", spboard->movetab[i].tabval);
-        //printf("%6d", root_nodes[i]);
-    }
-    printf("\n"); 
-    fflush(stdout);
-} //mainThread 
-#endif        
+      
 //      put back pv_tabval after sort 
 // 20160804 - replaced by sf root move ordering
 //        spboard->movetab[0].tabval = pv_tabval;	
@@ -3994,7 +3982,7 @@ moves_loop: // When in check, search starts from here   //0101 also for rootNode
 		int noncap_gen_count=0;
     MoveTabStruct tempmove;
     int size=0;
-    long ncapsize=0;
+    int ncapsize=0;
 	//int kingidx,
 	int opt_value=INF;
 //int phase;
@@ -4045,6 +4033,7 @@ enum npvphase{HASHPV,CAP,KILLER,CM,NOCAP,BADCAP};
     {
     	//size=board.GenNonCap(&movetab[0]);
     	//append pawn/bis/ele/king noncap
+    	/* //0109 no need to recalc badcap tabval
     		for (int j=0; j<ncapsize; j++)
         {
             MoveTabStruct *tabptr;
@@ -4075,6 +4064,7 @@ enum npvphase{HASHPV,CAP,KILLER,CM,NOCAP,BADCAP};
             //movetab[size] = ncapmovetab[j];
             //size++;
         }
+      */
         //memcpy(&movetab[size], &ncapmovetab[0], sizeof(ncapmovetab[0]) * ncapsize);
         //size += ncapsize;
         size=board.GenNonCap(&ncapmovetab[ncapsize], depth);
