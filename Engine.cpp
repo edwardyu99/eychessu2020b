@@ -13,8 +13,8 @@
 #undef PERFT
 //#define DEBUG
 #undef DEBUG
-#define PRTBOARD
-//#undef PRTBOARD
+//#define PRTBOARD
+#undef PRTBOARD
 #undef PRINTEVA
 #define HISTPRUN
 //#undef HISTPRUN
@@ -2615,9 +2615,12 @@ return 0;
     //MoveStruct table[111];
     //int  tabval[111];
     //MoveTabStruct movetab[111];  //smp
-    MoveTabStruct ncapmovetab[64];
+    MoveTabStruct capncapmovetab[64]; //0116
+    
     int ncapsize; //=0;
-    int badcapsize; 
+    int capncapsize;  //0116
+    
+    int capsize; //0116
     //int max_root_nodes;
     board.nBanMoves = 0; 
     if (board.incheck)
@@ -2642,28 +2645,47 @@ return 0;
         //fflush(stdout);
     }
     else
-    {	//printf("info Before Gen\n");
-        //fflush(stdout);
+    {	
+        board.size=board.GenCap(&board.movetab[0], &capncapmovetab[0], capncapsize);  //0109 ncapsize
+        capsize = board.size; //0116 save capsize
+//0116 nosort yet        std::sort(board.movetab, board.movetab + board.size);
+#ifdef PRTBOARD 
+    printf("\nAfter gencap and sort: incheck=%d, size=%d", board.incheck, board.size);
+    printf("\nRoot moves: ");
+    for (int i=0; i<board.size; i++)
+    {   com2char(charmove, board.movetab[i].table.from, board.movetab[i].table.dest );
+        printf("  %s", charmove);
+    }    
+    printf("\n"); fflush(stdout);
+    printf("Root tbval: ");
+    for (int i=0; i<board.size; i++)
+         printf("%6d", board.movetab[i].tabval);
+    printf("\n"); fflush(stdout);
+#endif  
 
-        //size=(board.m_side ? board.GenCap<1>(&movetab[0], &ncapmovetab[0], ncapsize)
-        //: board.GenCap<0>(&movetab[0], &ncapmovetab[0], ncapsize));
-        board.size=board.GenCap(&board.movetab[0], &ncapmovetab[0], badcapsize);  //0109 ncapsize
-        //0109 append badcap after noncap
-        //0109 memcpy(&board.movetab[board.size], &ncapmovetab[0], ncapsize * 4);
-        //0109 board.size += ncapsize;
-
-//        size=board.GenCapQS(&movetab[0]);
-        ncapsize=board.GenNonCap(&board.movetab[board.size], 0);
-        board.size += ncapsize;
-
-         //0109 append badcap after noncap
-        memcpy(&board.movetab[board.size], &ncapmovetab[0], badcapsize * 4);
-        board.size += badcapsize;
-        //ncapsize=board.GenNonCapPBEK(&movetab[size]);
-        //size += ncapsize;
-
-        //printf("info Root Gen OK\n");
-        //fflush(stdout);
+//0116        ncapsize=board.GenNonCap(&board.movetab[board.size], 0);
+//0116        board.size += ncapsize;
+        ncapsize = board.GenNonCap(&capncapmovetab[capncapsize], 0);  //0116 gennoncap aft capncap 
+        capncapsize += ncapsize; //0116
+//0116 nosort yet       std::sort(capncapmovetab, capncapmovetab + capncapsize); //0116 sort capncapmovetab
+#ifdef PRTBOARD 
+    printf("\nAfter gennoncap and sort: capncapsize=%d", capncapsize);  
+    printf("\nRoot moves: ");
+    for (int i=0; i<capncapsize; i++)
+    {   com2char(charmove, capncapmovetab[i].table.from, capncapmovetab[i].table.dest );
+        printf("  %s", charmove);
+    }    
+    printf("\n"); fflush(stdout);
+    printf("Root tbval: ");
+    for (int i=0; i<capncapsize; i++)
+         printf("%6d", capncapmovetab[i].tabval);
+    printf("\n"); fflush(stdout);
+#endif  
+        
+         //0116 append capncap after cap
+        memcpy(&board.movetab[board.size], &capncapmovetab[0], capncapsize * 4);  //0116
+        board.size += capncapsize; //0116
+        
     }
 //----------------------------- 
     MoveStruct tempmove;
@@ -2708,15 +2730,20 @@ return 0;
                     board.unmakemove();
                 }
                 else
-                {
-                    board.movetab[i].tabval = -quiesCheck<PV>(board, -INF, INF, 0); //1210  
-                                                          
-                    board.unmakemove();                    
-                    if (board.movetab[i].tabval > best)
+                {   
+                    val = -quiesCheck<PV>(board, -INF, INF, 0); //1210                                    
+                    board.unmakemove();  
+                    if (val > best) 
+                    {  best = val;
+                    	 board.m_bestmove = tempmove.move;
+                    }	  
+                    if (i < capsize)          //0116         
                     {
-                    	best = board.movetab[i].tabval;
-                    	board.m_bestmove = board.movetab[i].table.move;
+                        if (!board.incheck && !board.see_ge(tempmove.from, tempmove.dest, 0))  //0116
+                            board.movetab[i].tabval = -BIGVAL + (val < 0 ? INF + val : val);  //0116 put badcap to bottom bef banmoves
+                        else board.movetab[i].tabval = INF + val;     //0116 put cap in front
                     }
+                    else board.movetab[i].tabval = val;
                     long long t_remain = board.IMaxTime - (GetTime()-board.m_startime);
     				        if (t_remain <= 0) 
     				        {	                     
@@ -2731,8 +2758,8 @@ return 0;
 
     std::sort(board.movetab, board.movetab + board.size);
     board.size = board.size - board.nBanMoves;   //remove banmoves and illegal   	
-    board.m_bestmove = board.movetab[0].table.move;
-    best = board.movetab[0].tabval;  //0109
+    //0117 board.m_bestmove = board.movetab[0].table.move;
+    //0117 best = board.movetab[0].tabval;  //0109
 #ifdef PRTBOARD    
     com2char(charmove, board.movetab[0].table.from, board.movetab[0].table.dest );
     printf("info depth 0 score %d pv %s\n", best, charmove);	        
@@ -2764,10 +2791,9 @@ return 0;
     board.root_depth=1;  //init for lazy smp 
 
 //lazy smp - init from i=1, leave i=0 in lazy smp loop   
-    for (int i=1;i<board.size;++i)
-    {
-        	board.movetab[i].tabval = -BIGVAL;
-    }
+//0116    for (int i=1;i<board.size;++i)
+//0116        	board.movetab[i].tabval = -BIGVAL;
+    
 //--------------------------------------
 	        Board* spboard;     	        
 //	         spboard = &board;              
@@ -2872,8 +2898,8 @@ int Engine::Lazy_smp_ID_loop(unsigned int idx, Board* spboard
 //    int pv_tabval;  
 
     
-int delta = 18; //mf;  //0109 19; //asp_window
-int lastbest = spboard->movetab[0].tabval;   //1231 init to first root tabval //INF;
+int delta; //0117 = 18; //mf;  //0109 19; //asp_window
+int lastbest = -INF; //0117 spboard->movetab[0].tabval;   //1231 init to first root tabval //INF;
     //Iterative deepening at searchroot
     //for(depth=start_depth; depth<IMaxDepth; ++depth) //depth=1 has been qsearch??
 
@@ -4100,7 +4126,8 @@ enum npvphase{HASHPV,CAP,KILLER,CM,NOCAP,BADCAP};
             case HASHPV: 	// 0 hashmove
             {
             	  if (rootNode)
-            	     tempmove.table.move = board.movetab[i].table.move;  //0101 rootmove
+            	  {   tempmove.table.move = board.movetab[i].table.move;  //0101 rootmove
+                }  
             	  else
             	  {	   
                 tempmove.table.move=ttMove;
@@ -4126,13 +4153,10 @@ enum npvphase{HASHPV,CAP,KILLER,CM,NOCAP,BADCAP};
            case CAP: 	// 2 capture
             {
                 tempmove.tabentry = GetNextMove(i, size, movetab);
-                if (
-                        tempmove.table.move==ttMove
-//                        || tempmove.table.move==g_matekiller[board.ply].move
-                   )
+                if ( tempmove.table.move==ttMove)                  
                     continue;
-                   
-                if (!incheck && !board.see_ge(tempmove.from, tempmove.dest,0)) 
+                //0114 if (!incheck &&  
+                if ( !board.see_ge(tempmove.from, tempmove.dest,0))  //0114
                 {
                 	//1013 instead of append to ncapmovetab, separate to badcapmovetab
                 	//ncapmovetab[ncapsize].table.move = tempmove.table.move;
@@ -4678,9 +4702,8 @@ if (phase==NOCAP || rootNode) //4)   //0101 hist prun for rootNode
                      memcpy(pv+1, childPv, (MAXDEPTH - board.ply) * sizeof(move_t));  //1224 try short memcpy
                      //1224 pv[MAX_PLY - 1] = 0; //NULL_MOVE; //1210 to be sure we always end will a sential end-of-list 
                      pv[MAXDEPTH - 1] = 0; //1224 
-              }	 
-              else 
-              	 board.movetab[i].tabval = -INF; 
+              }	               
+              else  board.movetab[i].tabval = -INF; 
               	  
                             
       }

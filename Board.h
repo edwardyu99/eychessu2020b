@@ -876,7 +876,9 @@ unsigned int bitattk[10]; // = {0,0,0,0,0,0,0,0,0,0}; //[left-right][poscolor]  
 unsigned int bitpiece_attk; // = 0; //RrRrCcCc HhHhEeEe BbBbPpPp PpPpPpKk  //for eval forked rooks 
 
 MoveTabStruct movetab[111]; //1226 store rootmoves for rootNode [128] for smp  //111= 局面的合理着法数也不会超过"MAX_MOVE_NUM / 2"
+MoveTabStruct badcapmovetab[16]; //0114
 int size; //for smp, no. of movetab 
+int badcapsize; //0114
 int incheck; //for smp 
 unsigned long long  m_nodes; //for smp
 unsigned long long m_startime; //for smp
