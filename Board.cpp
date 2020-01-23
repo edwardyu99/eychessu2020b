@@ -2338,7 +2338,7 @@ int  Board::GenCap(MoveTabStruct *movetab, MoveTabStruct *ncapmovetab, int &ncap
                 else if ( (piecedest&1) !=t_side)  // color not same side
                     {
                       movetab[nMove].tabentry = (SrcSq <<8) + DstSq;
-                      movetab[nMove].tabval = PIECE_VALU(piecedest) + caphis_table(PIECE_IDX(bb), DstSq); //0109 - PAWN //0107 HistValMax;
+                      movetab[nMove].tabval = PIECE_VALU(piecedest) ; //0123 + caphis_table(PIECE_IDX(bb), DstSq); //0109 - PAWN //0107 HistValMax;
                       nMove++;
 		    						}
 
@@ -2374,7 +2374,7 @@ int  Board::GenCap(MoveTabStruct *movetab, MoveTabStruct *ncapmovetab, int &ncap
                 else if ( (piecedest&1) != t_side )  // color not same side
                 {
                     movetab[nMove].tabentry = (SrcSq <<8) + DstSq;
-                    movetab[nMove].tabval = PIECE_VALU(piecedest) + caphis_table(PIECE_IDX(bb), DstSq); //0109 - ADVISOR//0107 HistValMax;
+                    movetab[nMove].tabval = PIECE_VALU(piecedest) ; //0123 + caphis_table(PIECE_IDX(bb), DstSq); //0109 - ADVISOR//0107 HistValMax;
                     nMove++;
                 }
                 DstPtr ++; //--;
@@ -2412,7 +2412,7 @@ int  Board::GenCap(MoveTabStruct *movetab, MoveTabStruct *ncapmovetab, int &ncap
                    	//if ( piece[(SrcSq+DstSq) >>1]==0)
                     {
                           movetab[nMove].tabentry = (SrcSq <<8) + DstSq;
-                      movetab[nMove].tabval = PIECE_VALU(piecedest) + caphis_table(PIECE_IDX(bb), DstSq); //0109 - ELEPHAN HistValMax;
+                      movetab[nMove].tabval = PIECE_VALU(piecedest) ; //0123 + caphis_table(PIECE_IDX(bb), DstSq); //0109 - ELEPHAN HistValMax;
                       nMove++;
                     }
                 }
@@ -2453,7 +2453,7 @@ for (int bb=hors_index[t_side]; bb>=20;  bb-=2)
 									//if (piece[*EyeLegPtr]==0)
 									{
                     movetab[nMove].tabentry = (SrcSq <<8) + DstSq;
-                      movetab[nMove].tabval = PIECE_VALU(piecedest) + caphis_table(PIECE_IDX(bb), DstSq); //0109 - HORSE HistValMax;
+                      movetab[nMove].tabval = PIECE_VALU(piecedest) ; //0123 + caphis_table(PIECE_IDX(bb), DstSq); //0109 - HORSE HistValMax;
                       nMove++;
                   }
                 }
@@ -2497,7 +2497,7 @@ for (int bb=rook_index[t_side]; bb>=24; bb-=2)
                     if ( (piece[DstSq]&1) != t_side)
                     {
                       movetab[nMove].tabentry = (SrcSq <<8) + DstSq;
-                      movetab[nMove].tabval = PIECE_VALU(piece[DstSq]) + caphis_table(PIECE_IDX(bb), DstSq); //0109 - bb HistValMax;
+                      movetab[nMove].tabval = PIECE_VALU(piece[DstSq]) ; //0123 + caphis_table(PIECE_IDX(bb), DstSq); //0109 - bb HistValMax;
                       nMove++;
                     }
                 }
@@ -2509,7 +2509,7 @@ for (int bb=rook_index[t_side]; bb>=24; bb-=2)
                     if ( (piece[DstSq]&1) != t_side)
                     {
                       movetab[nMove].tabentry = (SrcSq <<8) + DstSq;
-                      movetab[nMove].tabval = PIECE_VALU(piece[DstSq]) + caphis_table(PIECE_IDX(bb), DstSq); //0109 - bb HistValMax;
+                      movetab[nMove].tabval = PIECE_VALU(piece[DstSq]) ; //0123 + caphis_table(PIECE_IDX(bb), DstSq); //0109 - bb HistValMax;
                       nMove++;
                     }
                 }
@@ -2547,7 +2547,7 @@ for (int bb=rook_index[t_side]; bb>=24; bb-=2)
             else if (  (piecedest&1) != t_side)  // color not same side
             {
                 movetab[nMove].tabentry = (SrcSq <<8) + DstSq;
-                movetab[nMove].tabval = PIECE_VALU(piecedest) + caphis_table(PIECE_IDX(bb), DstSq); //0109 -32 HistValMax;
+                movetab[nMove].tabval = PIECE_VALU(piecedest) ; //0123 + caphis_table(PIECE_IDX(bb), DstSq); //0109 -32 HistValMax;
                 nMove++;
             }
             DstPtr --; //++;
@@ -2592,7 +2592,7 @@ int  Board::GenCapQS(MoveTabStruct *movetab)
                 else if ( (piecedest&1) !=q_side)  // color not same side
                     {
                       movetab[nMove].tabentry = (SrcSq <<8) + DstSq;
-                      movetab[nMove].tabval = PIECE_VALU(piecedest) + caphis_table(PIECE_IDX(bb), DstSq); //0109 - PAWN;
+                      movetab[nMove].tabval = PIECE_VALU(piecedest) ; //0123 + caphis_table(PIECE_IDX(bb), DstSq); //0109 - PAWN;
                       nMove++;
 		    						}
                 DstPtr ++;
@@ -2622,7 +2622,7 @@ int  Board::GenCapQS(MoveTabStruct *movetab)
                 else if ( (piecedest&1) != q_side )  // color not same side
                 {
                     movetab[nMove].tabentry = (SrcSq <<8) + DstSq;
-                      movetab[nMove].tabval = PIECE_VALU(piecedest) + caphis_table(PIECE_IDX(bb), DstSq); //0109 - ADVISOR;
+                      movetab[nMove].tabval = PIECE_VALU(piecedest) ; //0123 + caphis_table(PIECE_IDX(bb), DstSq); //0109 - ADVISOR;
                       nMove++;
                 }
                 DstPtr ++; //--; //++;
@@ -2656,7 +2656,7 @@ int  Board::GenCapQS(MoveTabStruct *movetab)
                    	//if ( piece[(SrcSq+DstSq) >>1]==0)
                     {
                           movetab[nMove].tabentry = (SrcSq <<8) + DstSq;
-                      movetab[nMove].tabval = PIECE_VALU(piecedest) + caphis_table(PIECE_IDX(bb), DstSq); //0109 - ELEPHAN;
+                      movetab[nMove].tabval = PIECE_VALU(piecedest) ; //0123 + caphis_table(PIECE_IDX(bb), DstSq); //0109 - ELEPHAN;
                       nMove++;
                     }
                 }
@@ -2693,7 +2693,7 @@ for (int bb=hors_index[q_side]; bb>=20;  bb-=2)
 									//if (piece[*EyeLegPtr]==0)
 									{
                     movetab[nMove].tabentry = (SrcSq <<8) + DstSq;
-                      movetab[nMove].tabval = PIECE_VALU(piecedest) + caphis_table(PIECE_IDX(bb), DstSq); //0109 - HORSE;
+                      movetab[nMove].tabval = PIECE_VALU(piecedest) ; //0123 + caphis_table(PIECE_IDX(bb), DstSq); //0109 - HORSE;
                       nMove++;
                   }
                 }
@@ -2734,7 +2734,7 @@ for (int bb=rook_index[q_side]; bb>=24; bb-=2)
                     if ( (piece[DstSq]&1) != q_side)
                     {
                       movetab[nMove].tabentry = (SrcSq <<8) + DstSq;
-                      movetab[nMove].tabval = PIECE_VALU(piece[DstSq]) + caphis_table(PIECE_IDX(bb), DstSq); //0109 - bb; //CANNON;
+                      movetab[nMove].tabval = PIECE_VALU(piece[DstSq]) ; //0123 + caphis_table(PIECE_IDX(bb), DstSq); //0109 - bb; //CANNON;
                       nMove++;
                     }
                 }
@@ -2746,7 +2746,7 @@ for (int bb=rook_index[q_side]; bb>=24; bb-=2)
                     if ( (piece[DstSq]&1) != q_side)
                     {
                       movetab[nMove].tabentry = (SrcSq <<8) + DstSq;
-                      movetab[nMove].tabval = PIECE_VALU(piece[DstSq]) + caphis_table(PIECE_IDX(bb), DstSq); //0109 - bb; //CANNON;
+                      movetab[nMove].tabval = PIECE_VALU(piece[DstSq]) ; //0123 + caphis_table(PIECE_IDX(bb), DstSq); //0109 - bb; //CANNON;
                       nMove++;
                     }
                 }
@@ -2778,7 +2778,7 @@ for (int bb=rook_index[q_side]; bb>=24; bb-=2)
             else if (  (piecedest&1) != q_side)  // color not same side
             {
                 movetab[nMove].tabentry = (SrcSq <<8) + DstSq;
-                movetab[nMove].tabval = PIECE_VALU(piecedest) + caphis_table(PIECE_IDX(bb), DstSq); //0109 - 32; //KING;
+                movetab[nMove].tabval = PIECE_VALU(piecedest) ; //0123 + caphis_table(PIECE_IDX(bb), DstSq); //0109 - 32; //KING;
                 nMove++;
             }
             DstPtr --; //++;

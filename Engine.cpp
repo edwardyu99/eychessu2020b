@@ -1,4 +1,6 @@
-﻿//#define THDINFO
+﻿//#define CAPHIST
+#undef  CAPHIST
+//#define THDINFO
 #undef THDINFO  
 
 //#define PREEVAL
@@ -1652,7 +1654,9 @@ void Clear_Hist(void)
 #endif
         //m_his_table[p][i][j].HistVal = 0;
         m_his_table[t][p][(i*16)+j].HistVal = 0;
+#ifdef CAPHIST
         m_his_table[t][p][(i*16)+j].CapHistVal = 0;  //0107
+#endif
     }
 }
 
@@ -2927,17 +2931,30 @@ if (mainThread) {
         //fprintf(traceout, " %s", charmove);
         printf("  %s", charmove);
     }    
-    printf("\n");
-    fflush(stdout);
+    printf("\n"); fflush(stdout);
     
     printf("Root tbval: ");
     for (int i=0; i<spboard->size; i++)
     {
         printf("%6d", spboard->movetab[i].tabval);
-        //printf("%6d", root_nodes[i]);
     }
-    printf("\n"); 
-    fflush(stdout);
+    printf("\n"); fflush(stdout);
+        
+    printf("Root hisval:");  //0122
+    for (int i=0; i<spboard->size; i++)
+    {   int roothisval = 0;
+    	  if (spboard->piece[spboard->movetab[i].table.dest]==0) //0122 
+              {	int SrcSq = spboard->movetab[i].table.from;
+              	int DstSq = spboard->movetab[i].table.dest;
+                int piecefromidx = PIECE_IDX(spboard->piece[SrcSq]);
+                //0122 int pointtablefrom = abs_pointtable[piecefromidx][nRank(SrcSq)][nFile(SrcSq)];
+              	//0122 board.movetab[i].tabval = -BIGVAL +
+              	//0122    (abs_pointtable[piecefromidx][nRank(DstSq)][nFile(DstSq)] - pointtablefrom) 
+                roothisval = (m_his_table[spboard->thd_id][piecefromidx][DstSq].HistVal); //0122
+              }	 
+        printf("%6d", roothisval);
+    }
+    printf("\n"); fflush(stdout);
 } //mainThread 
 #endif            	
     	
@@ -3077,10 +3094,7 @@ if (mainThread) {
                         
         std::stable_sort(spboard->movetab, spboard->movetab + spboard->size);	
 
-                
-
-      
-      if (best == UNKNOWN_VALUE)     
+      if (spboard->m_timeout)   //0122
       {    best = spboard->movetab[0].tabval;   //0103  best may be corrupted to unknown when timeout
       	   spboard->m_bestmove = spboard->movetab[0].table.move; 
       }
@@ -3284,8 +3298,9 @@ __forceinline
 #endif
 static void update_HistVal(HistStruct *hisvptr, int d, int thd_id)  //1017
 {
-    hisvptr->HistVal += d * d; //HistInc[depth]; //
-    //0107 hisvptr->HistVal += (d > 17 ? 0 : 29 * d * d + 138 * d - 134);  //0107 sf10 
+	  //0122 sf10  return d > 17 ? 0 : 29 * d * d + 138 * d - 134;
+    //hisvptr->HistVal += depth * depth * mf + ; //0122 
+      hisvptr->HistVal += (d > 17 ? 0 : 35 * d * d + 133 * d - 51);  //0122 sf10 
     if (hisvptr->HistVal >= HistValMax)
     {
 			//for (int i=0; i<(BOARD_SIZE-7); i++)
@@ -3295,11 +3310,11 @@ static void update_HistVal(HistStruct *hisvptr, int d, int thd_id)  //1017
 			for (int j=0; j<9; j++)
 			{
 				//m_his_table[p][i][j].HistVal /= 2; // (m_his_table[p][i][j].HistVal + 1) / 2;
-        m_his_table[thd_id][p][(i*16)+j].HistVal >>= 1;     //0107   /= 2;
+        m_his_table[thd_id][p][(i*16)+j].HistVal  /= 2;   //0122 cannot use shift for signed short
 			}
     }
 }
-
+#ifdef CAPHIST
 #ifdef __GNUC__
 inline
 #else  
@@ -3317,7 +3332,7 @@ static void update_capture_stats(HistStruct *hisvptr, int d, MoveStruct captures
 			for (int j=0; j<9; j++)
 			{
 				//m_his_table[p][i][j].HistVal /= 2; // (m_his_table[p][i][j].HistVal + 1) / 2;
-        m_his_table[board.thd_id][p][(i*16)+j].CapHistVal >>= 1;     //0107   /= 2; 
+        m_his_table[board.thd_id][p][(i*16)+j].CapHistVal /= 2;  //0122 
 			}
     }
     
@@ -3332,13 +3347,14 @@ static void update_capture_stats(HistStruct *hisvptr, int d, MoveStruct captures
       }
     
 }
+#endif
 
 #ifdef __GNUC__
 inline
 #else  
 __forceinline
 #endif
-static void update_history(HistStruct *hisvptr, int depth,
+static void update_history(HistStruct *hisvptr, int d,
                       MoveTabStruct movesSearched[], int noncap_gen_count, int thd_id)   //1017
 {
 		hisvptr->HistHit++;
@@ -3361,19 +3377,20 @@ static void update_history(HistStruct *hisvptr, int depth,
 							for (int i=0; i<10; i++)
 							for (int j=0; j<9; j++)
 							{
-								m_his_table[thd_id][p][(i*16)+j].HistHit >>= 1;   //0107 /= 2; // (m_his_table[p][i][j].HistHit + 1) / 2;
-        				m_his_table[thd_id][p][(i*16)+j].HistTot >>= 1;   //0107 =/= 2; // (m_his_table[p][i][j].HistTot + 1) / 2;
+								m_his_table[thd_id][p][(i*16)+j].HistHit /= 2; // (m_his_table[p][i][j].HistHit + 1) / 2;
+        				m_his_table[thd_id][p][(i*16)+j].HistTot /= 2; // (m_his_table[p][i][j].HistTot + 1) / 2;
     					}
   					}
 
-  					hisvptri->HistVal -= depth * depth;
+  					//0122 hisvptri->HistVal -= depth * depth * mf; //0122
+  					hisvptr->HistVal -= (d > 17 ? 0 : 35 * d * d + 133 * d - 51);  //0122 sf10 
             if (hisvptri->HistVal <= -HistValMax)
             {
     	        for (int p=0; p<10; p++)
 		          for (int i=0; i<10; i++)
 			        for (int j=0; j<9; j++)
 			        {
-				        m_his_table[thd_id][p][(i*16)+j].HistVal >>= 1;  //0107 /= 2; // (m_his_table[p][i][j].HistVal + 1) / 2;
+				        m_his_table[thd_id][p][(i*16)+j].HistVal /= 2; //0122
 			        }
             }
 
@@ -4690,7 +4707,7 @@ if (phase==NOCAP || rootNode) //4)   //0101 hist prun for rootNode
       // updating best move, PV and TT.
       //sf10 if (Threads.stop.load(std::memory_order_relaxed))
       //sf10    return VALUE_ZERO;
-      if (board.m_timeout) //stop
+      if (board.m_timeout) //stop  //0122 important!! to prevent buggy move
         	return UNKNOWN_VALUE;
       
       if (rootNode)   
@@ -4703,9 +4720,16 @@ if (phase==NOCAP || rootNode) //4)   //0101 hist prun for rootNode
                      //1224 pv[MAX_PLY - 1] = 0; //NULL_MOVE; //1210 to be sure we always end will a sential end-of-list 
                      pv[MAXDEPTH - 1] = 0; //1224 
               }	               
-              else  board.movetab[i].tabval = -INF; 
-              	  
-                            
+//0122              else if (capture==0) //0122 
+//0122              {	int SrcSq = tempmove.from;
+//0122              	int DstSq = tempmove.dest;
+//0122                int piecefromidx = PIECE_IDX(board.piece[SrcSq]);
+//0122                int pointtablefrom = abs_pointtable[piecefromidx][nRank(SrcSq)][nFile(SrcSq)];
+//0122              	board.movetab[i].tabval = -BIGVAL +
+//0122              	    (abs_pointtable[piecefromidx][nRank(DstSq)][nFile(DstSq)] - pointtablefrom) 
+//0122                   + (m_his_table[board.thd_id][piecefromidx][DstSq].HistVal); //his_table(piecefromidx, DstSq);  //0122 -INF; 
+//0122              }	  
+              else  board.movetab[i].tabval = -BIGVAL; //0122             
       }
       /*
       if (value > bestValue)
@@ -4840,8 +4864,10 @@ end_phaseloop:
                 counterMoves[board.thd_id][PIECE_IDX(board.piece[prevSqdest])][prevSqdest].move = mvBest.move;  //1017
           
         } 
+#ifdef CAPHIST        
         else //0107 update capture hist   
         	update_capture_stats(hisvptr, depth, capturesSearched, captureCount, board);  //0107
+#endif
     }
     
     //1119 else if (best <= old_alpha)
