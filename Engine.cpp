@@ -2692,6 +2692,9 @@ return 0;
         
     }
 //----------------------------- 
+    std::stable_sort(board.movetab, board.movetab + board.size); //0204
+    move_t root_pv[MAX_PLY+1]; //0204
+    memset(root_pv, 0, sizeof(root_pv));  //0204   
     MoveStruct tempmove;
     int best=-INF;
     board.m_bestmove = board.movetab[0].table.move; //init 
@@ -2735,7 +2738,9 @@ return 0;
                 }
                 else
                 {   
-                    val = -quiesCheck<PV>(board, -INF, INF, 0); //1210                                    
+                    //0204 val = -quiesCheck<PV>(board, -INF, INF, 0); //1210  
+                            
+                    val = -search<PV>(board, -INF, INF, 2, NULL_NO, root_pv);   //0204                     
                     board.unmakemove();  
                     if (val > best) 
                     {  best = val;
@@ -2765,8 +2770,20 @@ return 0;
     //0117 board.m_bestmove = board.movetab[0].table.move;
     //0117 best = board.movetab[0].tabval;  //0109
 #ifdef PRTBOARD    
-    com2char(charmove, board.movetab[0].table.from, board.movetab[0].table.dest );
-    printf("info depth 0 score %d pv %s\n", best, charmove);	        
+    //0204 com2char(charmove, board.movetab[0].table.from, board.movetab[0].table.dest );
+    //0204 printf("info depth 0 score %d pv %s\n", best, charmove);	 
+    printf("info depth 0 score %d pv", best);	//0204
+    for (int j=0; j<MAX_PLY+1; ++j)
+                {
+                    	  if (root_pv[j] == 0)
+                            break;
+                        MoveStruct temppv;
+                        temppv.move = root_pv[j];
+                        com2char(charmove, temppv.from, temppv.dest );
+                        printf(" %s", charmove); //fflush(stdout); 
+                     
+                }
+                printf("\n"); fflush(stdout);       
 	  print_board(best);
     printf("\nAfter gen and sort rootmoves: incheck=%d, nBanMoves=%d, nRootMoves=%d", board.incheck, board.nBanMoves, board.size);
     printf("\nRoot moves: ");
